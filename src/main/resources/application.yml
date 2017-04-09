@@ -1,0 +1,18 @@
+druid:
+    url: jdbc:mysql://www.maijinta.top:3306/blog?characterEncoding=UTF-8&useUnicode=true
+    username: frank
+    password: Frank315!
+    initial-size: 5
+    min-idle: 1
+    max-active: 100
+    test-on-borrow: true
+
+mybatis:
+    type-aliases-package: com.frank.model #实体类的包
+    mapper-locations: classpath:mapper/*.xml #Mapper的xml文件
+
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
