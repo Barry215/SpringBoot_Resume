@@ -15,9 +15,13 @@ public class Article {
 
     private Integer documentId;
 
+    private String archive;
+
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer state;
 
     private String content;
 
@@ -69,6 +73,14 @@ public class Article {
         this.documentId = documentId;
     }
 
+    public String getArchive() {
+        return archive;
+    }
+
+    public void setArchive(String archive) {
+        this.archive = archive == null ? null : archive.trim();
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -83,6 +95,14 @@ public class Article {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     public String getContent() {

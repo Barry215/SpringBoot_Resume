@@ -5,6 +5,16 @@ public class Tag {
 
     private String name;
 
+    private Integer articleId;
+
+    public Tag() {
+    }
+
+    public Tag(String name, Integer articleId) {
+        this.name = name;
+        this.articleId = articleId;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -19,5 +29,13 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public Integer getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Integer articleId) {
+        this.articleId = articleId;
     }
 }

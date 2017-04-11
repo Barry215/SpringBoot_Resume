@@ -1,6 +1,6 @@
 package com.frank.dto;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by frank on 17/4/10.
@@ -14,6 +14,10 @@ public class ArticleForm {
     private Integer hasPublished;
 
     private String content;
+
+    private String archive;
+
+    private List<String> tags;
 
     public String getTitle() {
         return title;
@@ -47,6 +51,22 @@ public class ArticleForm {
         this.content = content;
     }
 
+    public String getArchive() {
+        return archive;
+    }
+
+    public void setArchive(String archive) {
+        this.archive = archive;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "ArticleForm{" +
@@ -54,6 +74,8 @@ public class ArticleForm {
                 ", version='" + version + '\'' +
                 ", hasPublished=" + hasPublished +
                 ", content='" + content + '\'' +
+                ", archive='" + archive + '\'' +
+                ", tags=" + tags +
                 '}';
     }
 }

@@ -1,79 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.frank.dao.DocumentMapper">
-  <resultMap id="BaseResultMap" type="com.frank.model.Document">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="show_id" jdbcType="INTEGER" property="showId" />
-    <result column="edit_id" jdbcType="INTEGER" property="editId" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-  </resultMap>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
-      id, show_id, edit_id, state
-    from document
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from document
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.frank.model.Document" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into document (id, show_id, edit_id, 
-      state)
-    values (#{id,jdbcType=INTEGER}, #{showId,jdbcType=INTEGER}, #{editId,jdbcType=INTEGER}, 
-      #{state,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="com.frank.model.Document" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into document
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="showId != null">
-        show_id,
-      </if>
-      <if test="editId != null">
-        edit_id,
-      </if>
-      <if test="state != null">
-        state,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="showId != null">
-        #{showId,jdbcType=INTEGER},
-      </if>
-      <if test="editId != null">
-        #{editId,jdbcType=INTEGER},
-      </if>
-      <if test="state != null">
-        #{state,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.frank.model.Document">
-    update document
-    <set>
-      <if test="showId != null">
-        show_id = #{showId,jdbcType=INTEGER},
-      </if>
-      <if test="editId != null">
-        edit_id = #{editId,jdbcType=INTEGER},
-      </if>
-      <if test="state != null">
-        state = #{state,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.frank.model.Document">
-    update document
-    set show_id = #{showId,jdbcType=INTEGER},
-      edit_id = #{editId,jdbcType=INTEGER},
-      state = #{state,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+    <resultMap id="BaseResultMap" type="com.frank.model.Document">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="show_id" jdbcType="INTEGER" property="showId"/>
+        <result column="edit_id" jdbcType="INTEGER" property="editId"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+    </resultMap>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+            id,
+            show_id,
+            edit_id,
+            state
+        FROM document
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM document
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.frank.model.Document">
+        INSERT INTO document (id, show_id, edit_id,
+                              state)
+        VALUES (#{id,jdbcType=INTEGER}, #{showId,jdbcType=INTEGER}, #{editId,jdbcType=INTEGER},
+                #{state,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.frank.model.Document" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        insert into document
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="showId != null">
+                show_id,
+            </if>
+            <if test="editId != null">
+                edit_id,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="showId != null">
+                #{showId,jdbcType=INTEGER},
+            </if>
+            <if test="editId != null">
+                #{editId,jdbcType=INTEGER},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.frank.model.Document">
+        update document
+        <set>
+            <if test="showId != null">
+                show_id = #{showId,jdbcType=INTEGER},
+            </if>
+            <if test="editId != null">
+                edit_id = #{editId,jdbcType=INTEGER},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.frank.model.Document">
+        UPDATE document
+        SET show_id = #{showId,jdbcType=INTEGER},
+            edit_id = #{editId,jdbcType=INTEGER},
+            state   = #{state,jdbcType=INTEGER}
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="countDocument" resultType="integer">
+        SELECT count(id)
+        FROM document
+        WHERE show_id IS NOT NULL
+              AND state = 1
+    </select>
 </mapper>

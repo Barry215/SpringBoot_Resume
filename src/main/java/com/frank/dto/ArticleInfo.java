@@ -8,28 +8,34 @@ import java.util.List;
  * Created by frank on 17/4/10.
  */
 public class ArticleInfo extends ArticleForm {
-    private List<String> tagList;
+    private int article_id;
 
     private int browseCount;
 
     private int document_id;
 
-    public ArticleInfo(Article article, List<String> tagList) {
+    public ArticleInfo(Article article, List<String> tagList, boolean full_content) {
         super.setTitle(article.getTitle());
-        super.setContent(article.getContent());
+        if (article.getContent().length() >= 50 && !full_content){
+            super.setContent(article.getContent().substring(0,50));
+        }else {
+            super.setContent(article.getContent());
+        }
         super.setVersion(article.getVersion());
         super.setHasPublished(article.getHasPublished());
+        super.setTags(tagList);
+        super.setArchive(article.getArchive());
+        this.article_id = article.getId();
         this.browseCount = article.getBrowseCount();
         this.document_id = article.getDocumentId();
-        this.tagList = tagList;
     }
 
-    public List<String> getTagList() {
-        return tagList;
+    public int getArticle_id() {
+        return article_id;
     }
 
-    public void setTagList(List<String> tagList) {
-        this.tagList = tagList;
+    public void setArticle_id(int article_id) {
+        this.article_id = article_id;
     }
 
     public int getBrowseCount() {
@@ -51,8 +57,7 @@ public class ArticleInfo extends ArticleForm {
     @Override
     public String toString() {
         return "ArticleInfo{" +
-                "tagList=" + tagList +
-                ", browseCount=" + browseCount +
+                "browseCount=" + browseCount +
                 ", document_id=" + document_id +
                 '}';
     }

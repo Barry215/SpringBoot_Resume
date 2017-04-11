@@ -14,4 +14,6 @@ public interface DocumentMapper {
     int updateByPrimaryKeySelective(Document record);
 
     int updateByPrimaryKey(Document record);
+
+    int countDocument();
 }
