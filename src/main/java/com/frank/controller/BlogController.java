@@ -263,5 +263,19 @@ public class BlogController {
         return new JsonResult<>(200,"success",articleInfoList);
     }
 
+    @RequestMapping(value = "/p/archive/count",method = RequestMethod.GET)
+    @ApiOperation(notes = "获取归档数", value = "获取归档数", httpMethod = "GET")
+    @ApiImplicitParam(name = "", value = "null", required = true, dataType = "null")
+    public JsonResult<?> getArchiveArticles() {
 
+        return new JsonResult<>(200,"success",articleMapper.selectArchiveCount());
+    }
+
+    @RequestMapping(value = "/p/tag/count",method = RequestMethod.GET)
+    @ApiOperation(notes = "获取标签数", value = "获取标签数", httpMethod = "GET")
+    @ApiImplicitParam(name = "", value = "null", required = true, dataType = "null")
+    public JsonResult<?> getTagsCount() {
+
+        return new JsonResult<>(200,"success",tagMapper.selectTagsCount());
+    }
 }

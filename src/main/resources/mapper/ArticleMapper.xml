@@ -264,5 +264,11 @@
         order by archive
         limit #{offset,jdbcType=INTEGER},8
     </select>
-
+    <select id="selectArchiveCount" resultType="java.lang.Integer">
+        SELECT
+        count(DISTINCT archive)
+        FROM article
+        where state = 1
+        and has_published = 1
+    </select>
 </mapper>

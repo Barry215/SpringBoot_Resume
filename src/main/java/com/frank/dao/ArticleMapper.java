@@ -26,4 +26,6 @@ public interface ArticleMapper {
     List<Article> selectHistoryArticles(Integer document_id);
 
     List<Article> selectArchiveDocuments(Integer offset);
+
+    int selectArchiveCount();
 }

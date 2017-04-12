@@ -20,4 +20,6 @@ public interface TagMapper {
     int updateByPrimaryKey(Tag record);
 
     List<String> selectTagsByArticle(Integer id);
+
+    int selectTagsCount();
 }
