@@ -26,8 +26,6 @@ public class BrowseCountAspect {
     @Resource
     private DocumentMapper documentMapper;
 
-    ThreadLocal<Long> time = new ThreadLocal<>();
-
     @Pointcut("execution(public * com.frank.controller.BlogController.getArticle(int)) && args(document_id)")
     public void browseCount(int document_id){}
 

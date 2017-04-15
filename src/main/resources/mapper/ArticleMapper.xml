@@ -206,7 +206,7 @@
     </select>
     <select id="selectDocuments" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         SELECT
-        article.id,
+        document.id,
         title,
         version,
         browse_count,
@@ -218,12 +218,12 @@
         article.state,
         content
         FROM article
-        inner JOIN document
-        on article.id = document.show_id
+        RIGHT JOIN document
+        on document.show_id = article.id
         WHERE document.state = 1
         and article.state = 1
         order by document.id desc
-        limit #{offset,jdbcType=INTEGER},8
+        limit #{offset,jdbcType=INTEGER} , 8
     </select>
     <select id="selectHistoryArticles" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         SELECT
@@ -242,10 +242,11 @@
         WHERE document_id = #{document_id,jdbcType=INTEGER}
         and state = 1
         and has_published = 1
+        order by id desc
     </select>
     <select id="selectArchiveDocuments" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         SELECT
-        article.id,
+        document.id,
         title,
         version,
         browse_count,
@@ -257,12 +258,13 @@
         article.state,
         content
         FROM article
-        inner join document
-        on article.id = document.show_id
+        right join document
+        on document.show_id = article.id
         WHERE article.state = 1
         and document.state = 1
-        order by archive
-        limit #{offset,jdbcType=INTEGER},8
+        group by archive
+        ORDER BY document.id DESC
+        limit #{offset,jdbcType=INTEGER} , 8
     </select>
     <select id="selectArchiveCount" resultType="java.lang.Integer">
         SELECT

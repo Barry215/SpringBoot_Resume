@@ -41,7 +41,6 @@ public class SpendTimeAspect {
         logger.info("IP地址 : " + request.getRemoteAddr());
         logger.info("执行的方法 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         logger.info("参数 : " + Arrays.toString(joinPoint.getArgs()));
-
     }
 
     @AfterReturning(returning = "JsonBody", pointcut = "timeSpend()")
