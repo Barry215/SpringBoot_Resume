@@ -10,6 +10,7 @@ import com.frank.dto.JsonResult;
 import com.frank.model.Article;
 import com.frank.model.Document;
 import com.frank.model.Tag;
+import com.frank.service.BlogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -46,6 +47,9 @@ public class BlogController {
 
     @Resource
     private TagMapper tagMapper;
+
+    @Resource
+    private BlogService blogService;
 
     /**
      * 创建文章
@@ -138,7 +142,7 @@ public class BlogController {
     @RequestMapping(value = "/p/edit",method = RequestMethod.PUT)
     @ApiOperation(notes = "修改文章", value = "修改文章", httpMethod = "PUT")
     @ApiImplicitParam(name = "articleModifyForm", value = "表单", required = true, dataType = "ArticleModifyForm")
-    @CacheEvict(cacheNames = "show_articleInfo", key = "#articleModifyForm.document_id", condition="#articleModifyForm.hasPublished == 1")
+    @CacheEvict(cacheNames = "show_articleInfo", key = "'id:'+#articleModifyForm.document_id", condition="#articleModifyForm.hasPublished == 1")
     public JsonResult<?> modifyArticle(@RequestBody ArticleModifyForm articleModifyForm) {
         Document document = documentMapper.selectByPrimaryKey(articleModifyForm.getDocument_id());
         int result;
@@ -235,13 +239,10 @@ public class BlogController {
     @RequestMapping(value = "/p/{document_id}",method = RequestMethod.GET)
     @ApiOperation(notes = "获取文章", value = "获取文章", httpMethod = "GET")
     @ApiImplicitParam(name = "document_id", value = "文章ID", required = true, dataType = "Integer")
-    @Cacheable(cacheNames = "show_articleInfo", key = "#document_id", unless = "#result.status == 404")
     public JsonResult<?> getArticle(@PathVariable int document_id) {
-        Document document = documentMapper.selectByPrimaryKey(document_id);
-        if (document.getShowId() != null){
-            Article article = articleMapper.selectByPrimaryKey(document.getShowId());
-            List<String> tags = tagMapper.selectTagsByArticle(document.getShowId());
-            ArticleInfo articleInfo = new ArticleInfo(article,tags,true);
+
+        ArticleInfo articleInfo = blogService.getArticleInfo(document_id);
+        if (articleInfo != null){
             return new JsonResult<>(200,"success",articleInfo);
         }
 
@@ -315,7 +316,7 @@ public class BlogController {
     @RequestMapping(value = "/p/{document_id}/check/{version}",method = RequestMethod.PUT)
     @ApiOperation(notes = "切换文章版本", value = "切换文章版本", httpMethod = "PUT")
     @ApiImplicitParam(name = "document_id&version", value = "文档ID&版本号", required = true, dataType = "Integer")
-    @CacheEvict(cacheNames = "show_articleInfo", key = "#document_id")
+    @CacheEvict(cacheNames = "show_articleInfo", key = "'id:'+#document_id")
     public JsonResult<?> checkVersion(@PathVariable int document_id, @PathVariable String version) {
         System.out.println("版本号："+version);
         Integer article_id = articleMapper.selectArticleByVersion(document_id,version);

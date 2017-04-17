@@ -18,6 +18,9 @@ public class ArticleInfo extends ArticleForm implements Serializable {
 
     private int document_id;
 
+    public ArticleInfo() {
+    }
+
     public ArticleInfo(Article article, List<String> tagList, boolean full_content) {
         super.setTitle(article.getTitle());
         if (article.getContent().length() >= 50 && !full_content){

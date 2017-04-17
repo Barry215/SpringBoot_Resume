@@ -38,5 +38,4 @@ public class BrowseCountAspect {
             articleMapper.updateByPrimaryKeySelective(article);
         }
     }
-
 }
