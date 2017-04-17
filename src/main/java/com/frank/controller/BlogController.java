@@ -14,6 +14,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
@@ -22,6 +25,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 
 /**
  * Created by frank on 17/3/9.
@@ -134,6 +138,7 @@ public class BlogController {
     @RequestMapping(value = "/p/edit",method = RequestMethod.PUT)
     @ApiOperation(notes = "修改文章", value = "修改文章", httpMethod = "PUT")
     @ApiImplicitParam(name = "articleModifyForm", value = "表单", required = true, dataType = "ArticleModifyForm")
+    @CacheEvict(cacheNames = "show_articleInfo", key = "#articleModifyForm.document_id", condition="#articleModifyForm.hasPublished == 1")
     public JsonResult<?> modifyArticle(@RequestBody ArticleModifyForm articleModifyForm) {
         Document document = documentMapper.selectByPrimaryKey(articleModifyForm.getDocument_id());
         int result;
@@ -230,6 +235,7 @@ public class BlogController {
     @RequestMapping(value = "/p/{document_id}",method = RequestMethod.GET)
     @ApiOperation(notes = "获取文章", value = "获取文章", httpMethod = "GET")
     @ApiImplicitParam(name = "document_id", value = "文章ID", required = true, dataType = "Integer")
+    @Cacheable(cacheNames = "show_articleInfo", key = "#document_id", unless = "#result.status == 404")
     public JsonResult<?> getArticle(@PathVariable int document_id) {
         Document document = documentMapper.selectByPrimaryKey(document_id);
         if (document.getShowId() != null){
@@ -278,6 +284,10 @@ public class BlogController {
         return new JsonResult<>(200,"success",articleInfoList);
     }
 
+    /**
+     * 获取归档数
+     */
+
     @RequestMapping(value = "/p/archive/count",method = RequestMethod.GET)
     @ApiOperation(notes = "获取归档数", value = "获取归档数", httpMethod = "GET")
     @ApiImplicitParam(name = "", value = "null", required = true, dataType = "null")
@@ -285,6 +295,10 @@ public class BlogController {
 
         return new JsonResult<>(200,"success",articleMapper.selectArchiveCount());
     }
+
+    /**
+     * 获取标签数
+     */
 
     @RequestMapping(value = "/p/tag/count",method = RequestMethod.GET)
     @ApiOperation(notes = "获取标签数", value = "获取标签数", httpMethod = "GET")
@@ -294,9 +308,14 @@ public class BlogController {
         return new JsonResult<>(200,"success",tagMapper.selectTagsCount());
     }
 
+    /**
+     * 切换文章版本
+     */
+
     @RequestMapping(value = "/p/{document_id}/check/{version}",method = RequestMethod.PUT)
     @ApiOperation(notes = "切换文章版本", value = "切换文章版本", httpMethod = "PUT")
     @ApiImplicitParam(name = "document_id&version", value = "文档ID&版本号", required = true, dataType = "Integer")
+    @CacheEvict(cacheNames = "show_articleInfo", key = "#document_id")
     public JsonResult<?> checkVersion(@PathVariable int document_id, @PathVariable String version) {
         System.out.println("版本号："+version);
         Integer article_id = articleMapper.selectArticleByVersion(document_id,version);

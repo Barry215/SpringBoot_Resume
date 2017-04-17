@@ -2,12 +2,16 @@ package com.frank.dto;
 
 import com.frank.model.Article;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by frank on 17/4/10.
  */
-public class ArticleInfo extends ArticleForm {
+public class ArticleInfo extends ArticleForm implements Serializable {
+
+    private static final long serialVersionUID = -1L;
+
     private int article_id;
 
     private int browseCount;
