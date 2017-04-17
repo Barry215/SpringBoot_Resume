@@ -49,8 +49,7 @@
                                         #{updateTime,jdbcType=TIMESTAMP},
                                         #{state,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
     </insert>
-    <insert id="insertSelective" parameterType="com.frank.model.Article" useGeneratedKeys="true" keyProperty="id"
-            keyColumn="id">
+    <insert id="insertSelective" parameterType="com.frank.model.Article" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into article
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -206,7 +205,7 @@
     </select>
     <select id="selectDocuments" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         SELECT
-        document.id,
+        article.id,
         title,
         version,
         browse_count,
@@ -246,7 +245,7 @@
     </select>
     <select id="selectArchiveDocuments" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         SELECT
-        document.id,
+        article.id,
         title,
         version,
         browse_count,

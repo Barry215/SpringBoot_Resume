@@ -146,10 +146,24 @@ public class BlogController {
             article.setHasPublished(articleModifyForm.getHasPublished());
             article.setArchive(articleModifyForm.getArchive());
             article.setDocumentId(articleModifyForm.getDocument_id());
-            for (String str : articleModifyForm.getTags()){
-                tagMapper.insertSelective(new Tag(str,article.getId()));
-            }
+
             result = articleMapper.insertSelective(article);
+            if (result == 1){
+                if (articleModifyForm.getHasPublished() == 1){
+                    System.out.println("修改文章的id："+article.getId());
+
+                    for (String str : articleModifyForm.getTags()){
+                        tagMapper.insertSelective(new Tag(str,article.getId()));
+                    }
+
+                    document.setShowId(article.getId());
+                    document.setEditId(article.getId());
+                }else {
+                    document.setEditId(article.getId());
+                }
+                documentMapper.updateByPrimaryKeySelective(document);
+                return new JsonResult<>(200,"success");
+            }
         }else {
             article = articleMapper.selectByPrimaryKey(document.getEditId());
             article.setTitle(articleModifyForm.getTitle());
@@ -162,17 +176,18 @@ public class BlogController {
                 tagMapper.insertSelective(new Tag(str,article.getId()));
             }
             result = articleMapper.updateByPrimaryKeySelective(article);
-        }
+            if (result == 1){
+                if (articleModifyForm.getHasPublished() == 1){
+                    System.out.println("修改文章的id："+article.getId());
 
-        if (result == 1){
-            if (articleModifyForm.getHasPublished() == 1){
-                document.setShowId(article.getId());
-                document.setEditId(article.getId());
-            }else {
-                document.setEditId(article.getId());
+                    document.setShowId(article.getId());
+                    document.setEditId(article.getId());
+                }else {
+                    document.setEditId(article.getId());
+                }
+                documentMapper.updateByPrimaryKeySelective(document);
+                return new JsonResult<>(200,"success");
             }
-            documentMapper.updateByPrimaryKeySelective(document);
-            return new JsonResult<>(200,"success");
         }
 
         return new JsonResult<>(500,"server error");
