@@ -86,4 +86,14 @@
         WHERE show_id IS NOT NULL
               AND state = 1
     </select>
+    <update id="checkVersion" parameterType="java.lang.Integer">
+        update document
+        <set>
+                show_id = #{article_id,jdbcType=INTEGER},
+
+                edit_id = #{article_id,jdbcType=INTEGER}
+
+        </set>
+        where id = #{document_id,jdbcType=INTEGER}
+    </update>
 </mapper>

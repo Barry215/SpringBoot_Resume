@@ -1,6 +1,7 @@
 package com.frank.dao;
 
 import com.frank.model.Document;
+import org.apache.ibatis.annotations.Param;
 
 public interface DocumentMapper {
     int deleteByPrimaryKey(Integer id);
@@ -16,4 +17,6 @@ public interface DocumentMapper {
     int updateByPrimaryKey(Document record);
 
     int countDocument();
+
+    int checkVersion(@Param("document_id") int document_id,@Param("article_id") int article_id);
 }

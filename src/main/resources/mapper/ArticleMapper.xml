@@ -261,8 +261,7 @@
         on document.show_id = article.id
         WHERE article.state = 1
         and document.state = 1
-        group by archive
-        ORDER BY document.id DESC
+        ORDER BY archive
         limit #{offset,jdbcType=INTEGER} , 8
     </select>
     <select id="selectArchiveCount" resultType="java.lang.Integer">
@@ -271,5 +270,12 @@
         FROM article
         where state = 1
         and has_published = 1
+    </select>
+    <select id="selectArticleByVersion" resultType="java.lang.Integer">
+        SELECT
+        id
+        FROM article
+        where document_id = #{document_id,jdbcType=INTEGER}
+        and version = #{version,jdbcType=VARCHAR}
     </select>
 </mapper>

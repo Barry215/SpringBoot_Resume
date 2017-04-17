@@ -293,4 +293,21 @@ public class BlogController {
 
         return new JsonResult<>(200,"success",tagMapper.selectTagsCount());
     }
+
+    @RequestMapping(value = "/p/{document_id}/check/{version}",method = RequestMethod.PUT)
+    @ApiOperation(notes = "切换文章版本", value = "切换文章版本", httpMethod = "PUT")
+    @ApiImplicitParam(name = "document_id&version", value = "文档ID&版本号", required = true, dataType = "Integer")
+    public JsonResult<?> checkVersion(@PathVariable int document_id, @PathVariable String version) {
+        System.out.println("版本号："+version);
+        Integer article_id = articleMapper.selectArticleByVersion(document_id,version);
+        if (article_id == null){
+            return new JsonResult<>(500,"invalid version");
+        }
+        int result = documentMapper.checkVersion(document_id,article_id);
+        if (result == 1){
+            return new JsonResult<>(200,"success");
+        }else {
+            return new JsonResult<>(500,"check fail");
+        }
+    }
 }
