@@ -22,7 +22,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
     /**
      * 可以定义多个组，比如本类中定义把test和demo区分开了 （访问页面就可以看到效果了）
-     * http://localhost:8080/swagger-ui.html#/blog-controller
+     * http://localhost:8888/swagger-ui.html
      */
     @Bean
     public Docket testApi() {

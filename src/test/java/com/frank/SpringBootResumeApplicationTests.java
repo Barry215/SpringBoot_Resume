@@ -1,6 +1,13 @@
 package com.frank;
 
 import com.frank.controller.BlogController;
+import com.frank.dao.ArticleMapper;
+import com.frank.dao.DocumentMapper;
+import com.frank.dao.TagMapper;
+import com.frank.dto.ArticleInfo;
+import com.frank.model.Article;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +28,15 @@ public class SpringBootResumeApplicationTests {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private ArticleMapper articleMapper;
+
+    @Resource
+    private DocumentMapper documentMapper;
+
+    @Resource
+    private TagMapper tagMapper;
 
     @Test
     public void setString(){
@@ -63,4 +79,18 @@ public class SpringBootResumeApplicationTests {
 	    System.out.println(blogController.getArticleCount());
 	}
 
+
+	@Test
+    public void testPageHelper(){
+        PageHelper.startPage(1, 2);
+        List<Article> articleList = articleMapper.selectDocuments();
+//        PageInfo<Article> pageInfo = new PageInfo<>(articleList);
+//        System.out.println("分页："+pageInfo);
+        for (Article article : articleList){
+            List<String> tags = tagMapper.selectTagsByArticle(article.getId());
+            ArticleInfo articleInfo = new ArticleInfo(article,tags,false);
+            System.out.println(articleInfo);
+        }
+
+    }
 }

@@ -16,6 +16,7 @@ import java.io.Serializable;
                 @WebInitParam(name="loginPassword",value="root"),// 密码
                 @WebInitParam(name="resetEnable",value="false")// 禁用HTML页面上的“Reset All”功能
         })
+//        http://localhost:8888/druid/login.html
 public class DruidStatViewServlet extends StatViewServlet implements Serializable {
         private static final long serialVersionUID = 1L;
 }

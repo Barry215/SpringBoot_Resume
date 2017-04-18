@@ -203,7 +203,7 @@
         and state = 1
         order by id desc
     </select>
-    <select id="selectDocuments" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    <select id="selectDocuments" resultMap="ResultMapWithBLOBs">
         SELECT
         article.id,
         title,
@@ -222,7 +222,6 @@
         WHERE document.state = 1
         and article.state = 1
         order by document.id desc
-        limit #{offset,jdbcType=INTEGER} , 8
     </select>
     <select id="selectHistoryArticles" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         SELECT
@@ -243,7 +242,7 @@
         and has_published = 1
         order by id desc
     </select>
-    <select id="selectArchiveDocuments" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    <select id="selectArchiveDocuments" resultMap="ResultMapWithBLOBs">
         SELECT
         article.id,
         title,
@@ -262,7 +261,6 @@
         WHERE article.state = 1
         and document.state = 1
         ORDER BY archive
-        limit #{offset,jdbcType=INTEGER} , 8
     </select>
     <select id="selectArchiveCount" resultType="java.lang.Integer">
         SELECT
@@ -277,5 +275,25 @@
         FROM article
         where document_id = #{document_id,jdbcType=INTEGER}
         and version = #{version,jdbcType=VARCHAR}
+    </select>
+    <select id="selectArticleLikeTitle" resultMap="ResultMapWithBLOBs" parameterType="string" resultType="java.util.List">
+        SELECT
+            article.id,
+            title,
+            version,
+            browse_count,
+            has_published,
+            document_id,
+            archive,
+            create_time,
+            update_time,
+            article.state,
+            content
+        FROM article
+        right JOIN document
+        on article.id = document.show_id
+        WHERE title LIKE CONCAT('%',#{title},'%')
+        and document.state = 1
+        and article.state = 1
     </select>
 </mapper>

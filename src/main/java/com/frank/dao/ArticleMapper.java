@@ -22,13 +22,15 @@ public interface ArticleMapper {
 
     List<Article> selectEditArticle();
 
-    List<Article> selectDocuments(Integer offset);
+    List<Article> selectDocuments();
 
     List<Article> selectHistoryArticles(Integer document_id);
 
-    List<Article> selectArchiveDocuments(Integer offset);
+    List<Article> selectArchiveDocuments();
 
     int selectArchiveCount();
 
     Integer selectArticleByVersion(@Param("document_id") int document_id, @Param("version") String version);
+
+    List<Article> selectArticleLikeTitle(String title);
 }
