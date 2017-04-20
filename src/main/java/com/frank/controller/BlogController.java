@@ -34,7 +34,7 @@ import java.util.Objects;
 /**
  * Created by frank on 17/3/9.
  */
-@Api(value = "示例接口")
+//@Api(value = "示例接口")
 @RestController
 @RequestMapping("/")
 @EnableAutoConfiguration

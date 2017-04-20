@@ -31,9 +31,13 @@ public class AdminFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest)req;
         String token = httpRequest.getHeader("Authorization");
-        String name;
         try{
-            name = tokenService.parseToken(token);
+            String name = tokenService.parseToken(token);
+            String value = stringRedisTemplate.opsForValue().get(name);
+            if (value == null || !value.equals(token)){
+                throw new JwtException("expired token");
+            }
+            chain.doFilter(req, resp);
         }catch (JwtException jwtException){
             String message = jwtException.getMessage();
             HttpServletResponse httpResponse = (HttpServletResponse) resp;
@@ -41,12 +45,7 @@ public class AdminFilter implements Filter {
             httpResponse.setContentType("application/json; charset=utf-8");
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpResponse.getWriter().write(JSON.toJSONString(new JsonResult<>(401,message)));
-            return;
         }
-        String value = stringRedisTemplate.opsForValue().get(name);
-        //设置时间
-        //重定向
-        chain.doFilter(req, resp);
     }
 
     public void destroy() {
