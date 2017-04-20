@@ -3,14 +3,24 @@ package com.frank.controller;
 import com.frank.dao.UserMapper;
 import com.frank.dto.JsonResult;
 import com.frank.service.TokenService;
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.log4j.Logger;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,6 +36,11 @@ public class AdminController {
      * @RequestHeader("Authorization") String authorization
      */
 
+    private Logger log = Logger.getLogger(AdminController.class);
+
+
+    @Resource
+    private Producer captchaProducer;
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -35,6 +50,48 @@ public class AdminController {
 
     @Resource
     private UserMapper userMapper;
+
+    @ApiOperation(notes = "获取验证码", value = "获取验证码")
+    @RequestMapping(value = "/kaptcha",method = RequestMethod.GET)
+    public ModelAndView getKaptchaImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpSession session = request.getSession();
+//        String code = (String)session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+//        log.info("******************验证码是: " + code + "******************");
+
+        response.setDateHeader("Expires", 0);
+
+        // Set standard HTTP/1.1 no-cache headers.
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+
+        // Set IE extended HTTP/1.1 no-cache headers (use addHeader).
+        response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+
+        // Set standard HTTP/1.0 no-cache header.
+        response.setHeader("Pragma", "no-cache");
+
+        // return a jpeg
+        response.setContentType("image/jpeg");
+
+        // create the text for the image
+        String capText = captchaProducer.createText();
+
+        // store the text in the session
+        session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
+
+        // create the image with the text
+        BufferedImage bi = captchaProducer.createImage(capText);
+        ServletOutputStream out = response.getOutputStream();
+
+        // write the data out
+        ImageIO.write(bi, "jpg", out);
+        try {
+            out.flush();
+        } finally {
+            out.close();
+        }
+        return null;
+    }
+
 
     @ApiOperation(notes = "后台登录", value = "后台登录")
     @ApiImplicitParams({
@@ -46,7 +103,16 @@ public class AdminController {
 //       @ApiResponse(code=401,message="用户名或密码错误")
 //    })
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public JsonResult<?> login(@RequestParam("name") String name,@RequestParam("password") String password,@RequestParam("verifyCode") String verifyCode) {
+    public JsonResult<?> login(HttpServletRequest request, @RequestParam("name") String name,@RequestParam("password") String password,@RequestParam("verifyCode") String verifyCode) {
+
+        HttpSession session = request.getSession();
+        String code = (String)session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if (code == null){
+            return new JsonResult<>(403,"验证码未获取");
+        }
+        if (!code.equals(verifyCode)){
+            return new JsonResult<>(400,"验证码错误");
+        }
 
         if (userMapper.selectByNameAndPwd(name,password) != null){
             String token = tokenService.createToken(name, password);
