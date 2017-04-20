@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.frank.model.User">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="user_head" jdbcType="VARCHAR" property="userHead" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="phone" jdbcType="CHAR" property="phone" />
@@ -13,21 +14,30 @@
   </resultMap>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
-      id, `name`, user_head, email, phone, description, github, weibo
+      id, `name`, `password`, user_head, email, phone, description, github, weibo
     from user
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByNameAndPwd" parameterType="string" resultType="integer">
+    select
+    id
+    from user
+    where `password` = #{password,jdbcType=VARCHAR}
+    and `name` = #{name,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from user
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.frank.model.User">
-    insert into user (id, name, user_head, 
-      email, phone, description, 
-      github, weibo)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{userHead,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, #{description,jdbcType=VARCHAR}, 
-      #{github,jdbcType=VARCHAR}, #{weibo,jdbcType=VARCHAR})
+    insert into user (id, `name`, `password`,
+      user_head, email, phone, 
+      description, github, weibo
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{userHead,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, 
+      #{description,jdbcType=VARCHAR}, #{github,jdbcType=VARCHAR}, #{weibo,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.frank.model.User">
     insert into user
@@ -36,7 +46,10 @@
         id,
       </if>
       <if test="name != null">
-        name,
+        `name`,
+      </if>
+      <if test="password != null">
+        `password`,
       </if>
       <if test="userHead != null">
         user_head,
@@ -64,6 +77,9 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
       <if test="userHead != null">
         #{userHead,jdbcType=VARCHAR},
       </if>
@@ -88,7 +104,10 @@
     update user
     <set>
       <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
       </if>
       <if test="userHead != null">
         user_head = #{userHead,jdbcType=VARCHAR},
@@ -113,7 +132,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.frank.model.User">
     update user
-    set name = #{name,jdbcType=VARCHAR},
+    set `name` = #{name,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
       user_head = #{userHead,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=CHAR},

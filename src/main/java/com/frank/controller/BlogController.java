@@ -68,7 +68,7 @@ public class BlogController {
     @Transactional
     @ApiOperation(notes = "创建文章", value = "创建文章")
     @ApiImplicitParam(name = "articleForm", value = "示例实体", required = true, dataType = "ArticleForm")
-    @RequestMapping(value = "/p",method = RequestMethod.POST)
+    @RequestMapping(value = "/p/new",method = RequestMethod.POST)
     public JsonResult<?> createArticle(@RequestBody ArticleForm articleForm) {
 
         Document document = new Document();
