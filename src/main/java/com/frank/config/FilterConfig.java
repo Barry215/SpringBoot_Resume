@@ -17,7 +17,7 @@ public class FilterConfig {
     @Bean
     public FilterRegistrationBean greetingFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        registrationBean.setName("greeting");
+        registrationBean.setName("adminFilter");
         AdminFilter adminFilter = new AdminFilter();
         registrationBean.setFilter(adminFilter);
         registrationBean.setOrder(1);

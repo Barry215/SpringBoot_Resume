@@ -5,6 +5,7 @@ import com.frank.dao.DocumentMapper;
 import com.frank.model.Article;
 import com.frank.model.Document;
 import org.apache.log4j.Logger;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -38,4 +39,19 @@ public class BrowseCountAspect {
             articleMapper.updateByPrimaryKeySelective(article);
         }
     }
+
+//    @Around("browseCount(document_id)")
+//    public void watchPerformance(int document_id,ProceedingJoinPoint jp) {
+//        try {
+//            jp.proceed();
+//            Document document = documentMapper.selectByPrimaryKey(document_id);
+//            if (document.getShowId() != null){
+//                Article article = articleMapper.selectByPrimaryKey(document.getShowId());
+//                article.setBrowseCount(article.getBrowseCount()+1);
+//                articleMapper.updateByPrimaryKeySelective(article);
+//            }
+//        } catch (Throwable e) {
+//            logger.info("环绕通知抛出异常",e);
+//        }
+//    }
 }

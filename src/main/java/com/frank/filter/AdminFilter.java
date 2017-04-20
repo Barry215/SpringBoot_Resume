@@ -3,28 +3,30 @@ package com.frank.filter;
 import com.frank.dto.JsonResult;
 import com.frank.service.TokenService;
 import io.jsonwebtoken.JwtException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import com.alibaba.fastjson.JSON;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 /**
  * Created by frank on 17/4/20.
  */
 public class AdminFilter implements Filter {
 
-    @Resource
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    @Resource
+    @Autowired
     private TokenService tokenService;
 
-    public void init(FilterConfig config) throws ServletException {
 
+    public void init(FilterConfig config) throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 
 
@@ -32,10 +34,13 @@ public class AdminFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest)req;
         String token = httpRequest.getHeader("Authorization");
         try{
+            if (token == null){
+                throw new JwtException("Unauthorized");
+            }
             String name = tokenService.parseToken(token);
             String value = stringRedisTemplate.opsForValue().get(name);
             if (value == null || !value.equals(token)){
-                throw new JwtException("expired token");
+                throw new JwtException("invalid token");
             }
             chain.doFilter(req, resp);
         }catch (JwtException jwtException){

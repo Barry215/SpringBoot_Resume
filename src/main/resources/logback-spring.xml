@@ -8,7 +8,7 @@
     </appender>
 
     <!--additivity="false"指打印完后不会向上传递，防止root再打印-->
-    <logger name="com.frank.controller" level="DEBUG" additivity="false">
+    <logger name="com.frank.dao" level="DEBUG" additivity="false">
         <appender-ref ref="console"/>
     </logger>
 

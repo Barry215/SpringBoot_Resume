@@ -41,6 +41,10 @@ public class AdminController {
         @ApiImplicitParam(name = "name", value = "用户名", required = true, dataType = "String"),
         @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String"),
         @ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, dataType = "String")})
+//    @ApiResponses({
+//       @ApiResponse(code=200,message="登录成功"),
+//       @ApiResponse(code=401,message="用户名或密码错误")
+//    })
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public JsonResult<?> login(@RequestParam("name") String name,@RequestParam("password") String password,@RequestParam("verifyCode") String verifyCode) {
 

@@ -36,11 +36,10 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public String parseToken(String token) throws JwtException{
-            Claims claims = Jwts.parser()
+        Claims claims = Jwts.parser()
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
-
         return (String)claims.get("name");
     }
 }
