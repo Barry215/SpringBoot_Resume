@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link type="text/css" href="../static/css/ext-theme-classic-all-debug.css" rel="stylesheet" />
+    <!--<script type="text/javascript" src="../static/js/ext-all.js"></script>-->
+    <!--<script type="text/javascript" src="../static/js/ext-all-dev.js"></script>-->
+    <script type="text/javascript" src="../static/js/ext-all-debug.js"></script>
+
+    <script type="text/javascript">
+//        Ext.create('Ext.Panel', {
+//            renderTo: 'helloWorldPanel',
+//            height: 200,
+//            width: 600,
+//            title: 'Hello world',
+//            html: 'First Ext JS Hello World Program'
+//        })
+
+        Ext.QiuckTips.init();
+        Ext.form.Field.prototype.msgTarget = 'side'; //提示出现的位置
+        var text = new Ext.form.TextField({
+            width: 200,
+            allowBlank: false, // 允许空白
+            maxLength: 20,
+            //inputType: ''
+            name: "username",
+            fieldLabel: "用户名",
+            blankText: "请输入用户名" // 用来空白提示
+            //...
+        });
+
+        Ext.onReady(function() {
+            var win = new Ext.Window({
+                // 生成一个窗口组件 然后在窗口上添加其他元素来 完成特定的模块功能
+                title: "window_frank",
+                width: 800,
+                height: 400,
+                html: "<p>hello world</p>", //插入html代码 生成窗体内容
+                maximizable: true,
+                minimizable: true,
+                closable: true,
+                items:text
+
+            });
+            win.show();
+        });
+
+    </script>
+</head>
+<body>
+<div id="helloWorldPanel" />
+</body>
+</html>
