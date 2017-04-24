@@ -1,5 +1,9 @@
 package com.frank.dto;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
+
 import java.util.List;
 
 /**
@@ -7,14 +11,23 @@ import java.util.List;
  */
 public class ArticleForm {
 
+    @NotEmpty(message = "标题不能为空")
+    @Length(min = 1,max = 30,message = "标题长度不符合要求")
     private String title;
 
+    @NotEmpty(message = "版本不能为空")
+    @Length(min = 1,max = 7,message = "版本长度不符合要求")
     private String version;
 
+    @Range(min = 0, max = 1, message = "是否发布只能是0或1")
     private Integer hasPublished;
 
+    @NotEmpty(message = "内容不能为空")
+    @Length(min = 1, message = "内容长度不符合要求")
     private String content;
 
+    @NotEmpty(message = "存档不能为空")
+    @Length(min = 1,max = 10,message = "存档长度不符合要求")
     private String archive;
 
     private List<String> tags;

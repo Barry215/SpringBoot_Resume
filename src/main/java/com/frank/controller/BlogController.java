@@ -11,6 +11,7 @@ import com.frank.model.Article;
 import com.frank.model.Document;
 import com.frank.model.Tag;
 import com.frank.service.BlogService;
+import com.frank.service.ValidateService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -22,13 +23,14 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import javax.validation.Valid;
+import java.util.*;
 
 
 /**
@@ -58,6 +60,9 @@ public class BlogController {
     @Resource
     private BlogService blogService;
 
+    @Resource
+    private ValidateService validateService;
+
     /**
      * 创建文章
      * hasPublished
@@ -69,7 +74,11 @@ public class BlogController {
     @ApiOperation(notes = "创建文章", value = "创建文章")
     @ApiImplicitParam(name = "articleForm", value = "示例实体", required = true, dataType = "ArticleForm")
     @RequestMapping(value = "/p/new",method = RequestMethod.POST)
-    public JsonResult<?> createArticle(@RequestBody ArticleForm articleForm) {
+    public JsonResult<?> createArticle(@RequestBody @Valid ArticleForm articleForm, BindingResult result) {
+
+        if (result.hasErrors()){
+            return validateService.validate(result);
+        }
 
         Document document = new Document();
         document.setState(1);
@@ -149,7 +158,12 @@ public class BlogController {
     @ApiImplicitParam(name = "articleModifyForm", value = "表单", required = true, dataType = "ArticleModifyForm")
     @RequestMapping(value = "/p/edit",method = RequestMethod.PUT)
     @CacheEvict(cacheNames = "show_articleInfo", key = "'id:'+#articleModifyForm.document_id", condition="#articleModifyForm.hasPublished == 1")
-    public JsonResult<?> modifyArticle(@RequestBody ArticleModifyForm articleModifyForm) {
+    public JsonResult<?> modifyArticle(@RequestBody @Valid ArticleModifyForm articleModifyForm, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()){
+            return validateService.validate(bindingResult);
+        }
+
         Document document = documentMapper.selectByPrimaryKey(articleModifyForm.getDocument_id());
         int result;
         Article article;
