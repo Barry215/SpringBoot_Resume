@@ -38,7 +38,7 @@ public class AdminFilter implements Filter {
                 throw new JwtException("Unauthorized");
             }
             String name = tokenService.parseToken(token);
-            String value = stringRedisTemplate.opsForValue().get(name);
+            String value = stringRedisTemplate.opsForValue().get("loginUser:"+name);
             if (value == null || !value.equals(token)){
                 throw new JwtException("invalid token");
             }

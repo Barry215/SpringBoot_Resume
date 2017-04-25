@@ -83,5 +83,29 @@
                <!--enableUpdateByExample="false">-->
         <!--</table>-->
 
+        <!--<table schema="blog" tableName="role"-->
+            <!--domainObjectName="Role" enableCountByExample="false"-->
+            <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+            <!--enableUpdateByExample="false">-->
+        <!--</table>-->
+
+        <!--<table schema="blog" tableName="permission"-->
+               <!--domainObjectName="Permission" enableCountByExample="false"-->
+               <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false">-->
+        <!--</table>-->
+
+        <!--<table schema="blog" tableName="role_permission"-->
+               <!--domainObjectName="RolePermission" enableCountByExample="false"-->
+               <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false">-->
+        <!--</table>-->
+
+        <!--<table schema="blog" tableName="user_role"-->
+               <!--domainObjectName="UserRole" enableCountByExample="false"-->
+               <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false">-->
+        <!--</table>-->
+
   </context>
 </generatorConfiguration>

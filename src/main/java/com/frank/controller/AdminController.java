@@ -2,6 +2,7 @@ package com.frank.controller;
 
 import com.frank.dao.UserMapper;
 import com.frank.dto.JsonResult;
+import com.frank.service.PermissionService;
 import com.frank.service.TokenService;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
@@ -9,6 +10,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.ShiroException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +41,6 @@ public class AdminController {
      */
 
     private Logger log = Logger.getLogger(AdminController.class);
-
 
     @Resource
     private Producer captchaProducer;
@@ -114,13 +117,18 @@ public class AdminController {
             return new JsonResult<>(400,"验证码错误");
         }
 
-        if (userMapper.selectByNameAndPwd(name,password) != null){
+        try {
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(name, password);
+            SecurityUtils.getSubject().login(usernamePasswordToken);
+
             String token = tokenService.createToken(name, password);
-            stringRedisTemplate.opsForValue().set(name, token, 1L, TimeUnit.DAYS);  //name要唯一
+            stringRedisTemplate.opsForValue().set("loginUser:"+name, token, 1L, TimeUnit.DAYS);  //name要唯一
+
             return new JsonResult<>(200,"登录成功",token);
+        }catch (ShiroException e){
+            return new JsonResult<>(401,e.getMessage());
         }
 
-        return new JsonResult<>(401,"用户名或密码错误");
     }
 
 
