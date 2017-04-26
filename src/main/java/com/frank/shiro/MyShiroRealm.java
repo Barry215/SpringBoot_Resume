@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * shiro身份校验核心类
  * 
- * @author 作者: z77z
- * @date 创建时间：2017年2月10日 下午3:19:48
+ * @author 作者: frank
+ * @date 创建时间：2017年4月25日 下午18:19:48
  */
 
 public class MyShiroRealm extends AuthorizingRealm {

@@ -4,6 +4,8 @@ import com.frank.dao.UserMapper;
 import com.frank.dto.JsonResult;
 import com.frank.service.PermissionService;
 import com.frank.service.TokenService;
+import com.frank.vcode.Captcha;
+import com.frank.vcode.GifCaptcha;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.ApiImplicitParam;
@@ -96,6 +98,32 @@ public class AdminController {
     }
 
 
+    /**
+     * 获取验证码（Gif版本）
+     */
+    @ApiOperation(notes = "获取验证码", value = "获取验证码")
+    @RequestMapping(value="getGifCode",method=RequestMethod.GET)
+    public void getGifCode(HttpServletResponse response,HttpServletRequest request){
+        try {
+            response.setHeader("Pragma", "No-cache");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setDateHeader("Expires", 0);
+            response.setContentType("image/gif");
+            /**
+             * gif格式动画验证码
+             * 宽，高，位数。
+             */
+            Captcha captcha = new GifCaptcha(146,33,4);
+            //输出
+            captcha.out(response.getOutputStream());
+            HttpSession session = request.getSession();
+            //存入Session
+            session.setAttribute(Constants.KAPTCHA_SESSION_KEY,captcha.text().toLowerCase());
+        } catch (Exception e) {
+            System.err.println("获取验证码异常："+e.getMessage());
+        }
+    }
+
     @ApiOperation(notes = "后台登录", value = "后台登录")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "name", value = "用户名", required = true, dataType = "String"),
@@ -117,17 +145,26 @@ public class AdminController {
             return new JsonResult<>(400,"验证码错误");
         }
 
-        try {
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(name, password);
-            SecurityUtils.getSubject().login(usernamePasswordToken);
-
+        if (userMapper.selectByNameAndPwd(name,password) != null){
             String token = tokenService.createToken(name, password);
             stringRedisTemplate.opsForValue().set("loginUser:"+name, token, 1L, TimeUnit.DAYS);  //name要唯一
-
             return new JsonResult<>(200,"登录成功",token);
-        }catch (ShiroException e){
-            return new JsonResult<>(401,e.getMessage());
         }
+
+        return new JsonResult<>(401,"用户名或密码错误");
+
+//        shiro
+//        try {
+//            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(name, password);
+//            SecurityUtils.getSubject().login(usernamePasswordToken);
+//
+//            String token = tokenService.createToken(name, password);
+//            stringRedisTemplate.opsForValue().set("loginUser:"+name, token, 1L, TimeUnit.DAYS);  //name要唯一
+//
+//            return new JsonResult<>(200,"登录成功",token);
+//        }catch (ShiroException e){
+//            return new JsonResult<>(401,e.getMessage());
+//        }
 
     }
 
