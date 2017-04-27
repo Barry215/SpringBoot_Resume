@@ -2,7 +2,9 @@ package com.frank.filter;
 
 import com.frank.dto.JsonResult;
 import com.frank.service.TokenService;
+import com.frank.shiro.MyShiroRealm;
 import io.jsonwebtoken.JwtException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -24,6 +26,9 @@ public class AdminFilter implements Filter {
     @Autowired
     private TokenService tokenService;
 
+    private Logger log = Logger.getLogger(MyShiroRealm.class);
+
+
 
     public void init(FilterConfig config) throws ServletException {
         SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
@@ -31,6 +36,8 @@ public class AdminFilter implements Filter {
 
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+        log.info("Filter：正在过滤");
+
         HttpServletRequest httpRequest = (HttpServletRequest)req;
         String token = httpRequest.getHeader("Authorization");
         try{

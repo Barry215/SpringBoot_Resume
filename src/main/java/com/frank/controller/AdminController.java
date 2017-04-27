@@ -57,7 +57,7 @@ public class AdminController {
     private UserMapper userMapper;
 
     @ApiOperation(notes = "获取验证码", value = "获取验证码")
-    @RequestMapping(value = "/kaptcha",method = RequestMethod.GET)
+    @RequestMapping(value = "/kaptcha", method = RequestMethod.GET)
     public ModelAndView getKaptchaImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession();
 //        String code = (String)session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
@@ -102,8 +102,8 @@ public class AdminController {
      * 获取验证码（Gif版本）
      */
     @ApiOperation(notes = "获取验证码", value = "获取验证码")
-    @RequestMapping(value="getGifCode",method=RequestMethod.GET)
-    public void getGifCode(HttpServletResponse response,HttpServletRequest request){
+    @RequestMapping(value = "getGifCode", method = RequestMethod.GET)
+    public void getGifCode(HttpServletResponse response, HttpServletRequest request) {
         try {
             response.setHeader("Pragma", "No-cache");
             response.setHeader("Cache-Control", "no-cache");
@@ -113,60 +113,76 @@ public class AdminController {
              * gif格式动画验证码
              * 宽，高，位数。
              */
-            Captcha captcha = new GifCaptcha(146,33,4);
+            Captcha captcha = new GifCaptcha(146, 33, 4);
             //输出
             captcha.out(response.getOutputStream());
             HttpSession session = request.getSession();
             //存入Session
-            session.setAttribute(Constants.KAPTCHA_SESSION_KEY,captcha.text().toLowerCase());
+            session.setAttribute(Constants.KAPTCHA_SESSION_KEY, captcha.text().toLowerCase());
         } catch (Exception e) {
-            System.err.println("获取验证码异常："+e.getMessage());
+            System.err.println("获取验证码异常：" + e.getMessage());
         }
     }
 
     @ApiOperation(notes = "后台登录", value = "后台登录")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "name", value = "用户名", required = true, dataType = "String"),
-        @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String"),
-        @ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, dataType = "String")})
+            @ApiImplicitParam(name = "name", value = "用户名", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, dataType = "String")})
 //    @ApiResponses({
 //       @ApiResponse(code=200,message="登录成功"),
 //       @ApiResponse(code=401,message="用户名或密码错误")
 //    })
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public JsonResult<?> login(HttpServletRequest request, @RequestParam("name") String name,@RequestParam("password") String password,@RequestParam("verifyCode") String verifyCode) {
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public JsonResult<?> login(HttpServletRequest request, @RequestParam("name") String name, @RequestParam("password") String password, @RequestParam("verifyCode") String verifyCode) {
 
         HttpSession session = request.getSession();
-        String code = (String)session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        if (code == null){
-            return new JsonResult<>(403,"验证码未获取");
+        String code = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if (code == null) {
+            return new JsonResult<>(403, "验证码未获取");
         }
-        if (!code.equals(verifyCode)){
-            return new JsonResult<>(400,"验证码错误");
-        }
-
-        if (userMapper.selectByNameAndPwd(name,password) != null){
-            String token = tokenService.createToken(name, password);
-            stringRedisTemplate.opsForValue().set("loginUser:"+name, token, 1L, TimeUnit.DAYS);  //name要唯一
-            return new JsonResult<>(200,"登录成功",token);
+        if (!code.equals(verifyCode)) {
+            return new JsonResult<>(400, "验证码错误");
         }
 
-        return new JsonResult<>(401,"用户名或密码错误");
-
-//        shiro
-//        try {
-//            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(name, password);
-//            SecurityUtils.getSubject().login(usernamePasswordToken);
-//
+//        if (userMapper.selectByNameAndPwd(name,password) != null){
 //            String token = tokenService.createToken(name, password);
 //            stringRedisTemplate.opsForValue().set("loginUser:"+name, token, 1L, TimeUnit.DAYS);  //name要唯一
-//
 //            return new JsonResult<>(200,"登录成功",token);
-//        }catch (ShiroException e){
-//            return new JsonResult<>(401,e.getMessage());
 //        }
+//
+//        return new JsonResult<>(401,"用户名或密码错误");
+
+//        shiro
+        try {
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(name, password);
+            SecurityUtils.getSubject().login(usernamePasswordToken);
+
+            String token = tokenService.createToken(name, password);
+            stringRedisTemplate.opsForValue().set("loginUser:" + name, token, 1L, TimeUnit.DAYS);  //name要唯一
+
+            return new JsonResult<>(200, "登录成功", token);
+        } catch (ShiroException e) {
+            return new JsonResult<>(401, e.getMessage());
+        }
 
     }
 
+    /*
+     * 转向登录页面
+     */
+    @ApiOperation(notes = "转向登录页面", value = "转向登录页面")
+    @RequestMapping(value = "/sign_in", method = RequestMethod.GET)
+    public JsonResult<?> signIn(HttpServletResponse response, HttpServletRequest request) {
+        return new JsonResult<>(401, "登录页面");
+    }
 
+    /*
+     * 转向未认证页面
+     */
+    @ApiOperation(notes = "转向未认证页面", value = "转向未认证页面")
+    @RequestMapping(value = "/unAuthorization", method = RequestMethod.GET)
+    public JsonResult<?> unAuthorization(HttpServletResponse response, HttpServletRequest request) {
+        return new JsonResult<>(403, "未认证");
+    }
 }

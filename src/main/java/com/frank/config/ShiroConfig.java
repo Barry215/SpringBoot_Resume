@@ -43,38 +43,38 @@ public class ShiroConfig {
     @Value("${spring.redis.timeout}")
     private int timeout;
 
-//    @Bean
-//    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
-//        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-//        shiroFilterFactoryBean.setSecurityManager(securityManager);
-//        shiroFilterFactoryBean.setLoginUrl("/admin/login/index"); // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+    @Bean
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+        shiroFilterFactoryBean.setLoginUrl("/admin/sign_in"); // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
 //        shiroFilterFactoryBean.setSuccessUrl("admin/index");     // 登录成功后要跳转的链接
-//        shiroFilterFactoryBean.setUnauthorizedUrl("/UnAuthorization");  // 未授权界面;
-//        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>(); // 拦截器
-//
-//        // 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边
-//        filterChainDefinitionMap.put("p/new", "authc,perms[create]"); // 配置被拦截的链接 顺序判断
-//        filterChainDefinitionMap.put("p/edit/**", "authc,perms[edit]");
-//        filterChainDefinitionMap.put("p/*/check/**", "authc,perms[check]");
-//        filterChainDefinitionMap.put("/**", "anon");
-//
-//        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-//
-//        return shiroFilterFactoryBean;
-//    }
+        shiroFilterFactoryBean.setUnauthorizedUrl("/unAuthorization");  // 未授权界面;
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>(); // 拦截器
 
-//    @Bean
-//    public SecurityManager securityManager() {
-//        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-//        // 设置realm
-//        securityManager.setRealm(myShiroRealm());
-//
-//        // 自定义缓存实现 使用redis
-//        securityManager.setCacheManager(cacheManager());
-//        // 自定义session管理 使用redis
-//        securityManager.setSessionManager(sessionManager());
-//        return securityManager;
-//    }
+        // 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边
+        filterChainDefinitionMap.put("p/new", "authc,perms[create]"); // 配置被拦截的链接 顺序判断
+        filterChainDefinitionMap.put("p/edit/**", "authc,perms[edit]");
+        filterChainDefinitionMap.put("p/*/check/**", "authc,perms[check]");
+        filterChainDefinitionMap.put("/**", "anon");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
+        return shiroFilterFactoryBean;
+    }
+
+    @Bean
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        // 设置realm
+        securityManager.setRealm(myShiroRealm());
+
+        // 自定义缓存实现 使用redis
+        securityManager.setCacheManager(cacheManager());
+        // 自定义session管理 使用redis
+        securityManager.setSessionManager(sessionManager());
+        return securityManager;
+    }
 
 
     /**

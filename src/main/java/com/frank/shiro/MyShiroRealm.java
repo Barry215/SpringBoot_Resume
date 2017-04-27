@@ -55,6 +55,8 @@ public class MyShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 
+		log.info("shiro：正在认证");
+
 		ValueOperations<String, String> opsForValue = stringRedisTemplate.opsForValue();
 
 		UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authcToken;
@@ -92,7 +94,9 @@ public class MyShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
-        Integer user_id = (Integer)SecurityUtils.getSubject().getPrincipal();
+		log.info("shiro：正在授权");
+
+		Integer user_id = (Integer)SecurityUtils.getSubject().getPrincipal();
 
 		SimpleAuthorizationInfo info =  new SimpleAuthorizationInfo();
 
