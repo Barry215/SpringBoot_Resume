@@ -178,11 +178,21 @@ public class AdminController {
     }
 
     /*
-     * 转向未认证页面
+     * 转向未授权页面
      */
-    @ApiOperation(notes = "转向未认证页面", value = "转向未认证页面")
+    @ApiOperation(notes = "转向未授权页面", value = "转向未授权页面")
     @RequestMapping(value = "/unAuthorization", method = RequestMethod.GET)
     public JsonResult<?> unAuthorization(HttpServletResponse response, HttpServletRequest request) {
-        return new JsonResult<>(403, "未认证");
+        return new JsonResult<>(403, "权限不足");
+    }
+
+    /*
+     * 退出登录
+     */
+    @ApiOperation(notes = "退出登录", value = "退出登录")
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public JsonResult<?> logout(HttpServletResponse response, HttpServletRequest request) {
+        SecurityUtils.getSubject().logout();
+        return new JsonResult<>(200, "退出成功！");
     }
 }

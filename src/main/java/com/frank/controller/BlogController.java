@@ -342,7 +342,6 @@ public class BlogController {
     @RequestMapping(value = "/p/{document_id}/check/{version}",method = RequestMethod.PUT)
     @CacheEvict(cacheNames = "show_articleInfo", key = "'id:'+#document_id")
     public JsonResult<?> checkVersion(@PathVariable int document_id, @PathVariable String version) {
-        System.out.println("版本号："+version);
         Integer article_id = articleMapper.selectArticleByVersion(document_id,version);
         if (article_id == null){
             return new JsonResult<>(500,"invalid version");

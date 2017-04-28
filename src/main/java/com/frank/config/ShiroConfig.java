@@ -7,6 +7,7 @@ import com.frank.service.impl.PermissionServiceImpl;
 import com.frank.shiro.MyShiroRealm;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -15,10 +16,12 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
@@ -49,14 +52,16 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/admin/sign_in"); // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
 //        shiroFilterFactoryBean.setSuccessUrl("admin/index");     // 登录成功后要跳转的链接
-        shiroFilterFactoryBean.setUnauthorizedUrl("/unAuthorization");  // 未授权界面;
+        shiroFilterFactoryBean.setUnauthorizedUrl("/admin/unAuthorization");  // 未授权界面;
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>(); // 拦截器
 
         // 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边
-        filterChainDefinitionMap.put("p/new", "authc,perms[create]"); // 配置被拦截的链接 顺序判断
-        filterChainDefinitionMap.put("p/edit/**", "authc,perms[edit]");
-        filterChainDefinitionMap.put("p/*/check/**", "authc,perms[check]");
+        filterChainDefinitionMap.put("/admin/logout", "logout");
+        filterChainDefinitionMap.put("/p/new", "authc,perms[create]"); // 配置被拦截的链接 顺序判断
+        filterChainDefinitionMap.put("/p/edit/**", "authc,perms[edit]");
+        filterChainDefinitionMap.put("/p/*/check/**", "authc,perms[check]");
         filterChainDefinitionMap.put("/**", "anon");
+
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
@@ -89,12 +94,43 @@ public class ShiroConfig {
 
     //开启shiro aop 注解支持
     /* 如下
-        @RequestMapping("/userAdd")
-        @RequiresPermissions("userInfo:add")//权限管理;
-        public String userInfoAdd(){
-           return "userInfoAdd";
-        }
+        @RequiresAuthentication
+        表示当前Subject已经通过login进行了身份验证；即Subject. isAuthenticated()返回true。
+
+        @RequiresUser
+        表示当前Subject已经身份验证或者通过记住我登录的。
+
+        @RequiresGuest
+        表示当前Subject没有身份验证或通过记住我登录过，即是游客身份。
+
+        @RequiresRoles(value={“admin”, “user”}, logical= Logical.AND)
+        表示当前Subject需要角色admin和user。
+
+        @RequiresPermissions (value={“user:a”, “user:b”}, logical= Logical.OR)
+        表示当前Subject需要权限user:a或user:b。
      */
+
+    /**
+     * Shiro生命周期处理器 * @return
+     */
+//    @Bean
+//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+//        return new LifecycleBeanPostProcessor();
+//    }
+
+    /**
+     * 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,
+     * 并在必要时进行安全逻辑验证 * 配置以下两个bean(DefaultAdvisorAutoProxyCreator(可选)和AuthorizationAttributeSourceAdvisor)即可实现此功能
+     */
+//    @Bean
+//    @DependsOn({"lifecycleBeanPostProcessor"})
+//    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
+//        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+//        advisorAutoProxyCreator.setProxyTargetClass(true);
+//        return advisorAutoProxyCreator;
+//    }
+
+
 //    @Bean
 //    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
 //        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();

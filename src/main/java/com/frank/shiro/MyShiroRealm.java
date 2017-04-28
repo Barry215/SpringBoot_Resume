@@ -93,6 +93,14 @@ public class MyShiroRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+		/*
+		*
+        * 当没有使用缓存的时候，不断刷新页面的话，这个代码会不断执行，
+        * 当其实没有必要每次都重新设置权限信息，所以我们需要放到缓存中进行管理；
+        * 当放到缓存中时，这样的话，doGetAuthorizationInfo就只会执行一次了，
+        * 缓存过期之后会再次执行。
+        */
+
 
 		log.info("shiro：正在授权");
 
@@ -115,5 +123,10 @@ public class MyShiroRealm extends AuthorizingRealm {
         }
 		info.setStringPermissions(permissionSet);
         return info;
+	}
+
+	public void clearCached() {
+		PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
+		super.clearCache(principals);
 	}
 }

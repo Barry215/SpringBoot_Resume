@@ -20,7 +20,7 @@ public class FilterConfig {
         registrationBean.setName("adminFilter");
         AdminFilter adminFilter = new AdminFilter();
         registrationBean.setFilter(adminFilter);
-        registrationBean.setOrder(1);
+        registrationBean.setOrder(10);
         List<String> urlList = new ArrayList<>();
         urlList.add("/p/new");
         urlList.add("/p/edit/*");
