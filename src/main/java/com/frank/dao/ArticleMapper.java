@@ -28,6 +28,10 @@ public interface ArticleMapper {
 
     List<Article> selectArchiveDocuments();
 
+    List<Article> selectArticlesInArchive(String archive);
+
+    List<String> selectArchives();
+
     int selectArchiveCount();
 
     Integer selectArticleByVersion(@Param("document_id") int document_id, @Param("version") String version);

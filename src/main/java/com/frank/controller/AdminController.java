@@ -4,6 +4,7 @@ import com.frank.dao.UserMapper;
 import com.frank.dto.JsonResult;
 import com.frank.service.PermissionService;
 import com.frank.service.TokenService;
+import com.frank.shiro.MyShiroRealm;
 import com.frank.vcode.Captcha;
 import com.frank.vcode.GifCaptcha;
 import com.google.code.kaptcha.Constants;
@@ -54,7 +55,7 @@ public class AdminController {
     private TokenService tokenService;
 
     @Resource
-    private UserMapper userMapper;
+    private MyShiroRealm myShiroRealm;
 
     @ApiOperation(notes = "获取验证码", value = "获取验证码")
     @RequestMapping(value = "/kaptcha", method = RequestMethod.GET)
@@ -192,7 +193,8 @@ public class AdminController {
     @ApiOperation(notes = "退出登录", value = "退出登录")
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public JsonResult<?> logout(HttpServletResponse response, HttpServletRequest request) {
-        SecurityUtils.getSubject().logout();
+        myShiroRealm.clearCached();
+//        SecurityUtils.getSubject().logout();  LogoutFilter帮你实现了
         return new JsonResult<>(200, "退出成功！");
     }
 }

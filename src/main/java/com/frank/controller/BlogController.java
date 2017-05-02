@@ -321,6 +321,36 @@ public class BlogController {
         return new JsonResult<>(200,"success",articleMapper.selectArchiveCount());
     }
 
+
+    /**
+     * 获取归档条目
+     */
+
+    @ApiOperation(notes = "获取归档条目", value = "获取归档数条目")
+    @RequestMapping(value = "/p/archives",method = RequestMethod.GET)
+    public JsonResult<?> getArchives() {
+
+        return new JsonResult<>(200,"success",articleMapper.selectArchives());
+    }
+
+    /**
+     * 获取归档内文章
+     */
+
+    @ApiOperation(notes = "获取归档内文章", value = "获取归档内文章")
+    @RequestMapping(value = "/p/archives/{archive}/u",method = RequestMethod.GET)
+    public JsonResult<?> getArticleInArchives(@PathVariable String archive) {
+        List<Article> articleList = articleMapper.selectArticlesInArchive(archive);
+        List<ArticleInfo> articleInfoList = new ArrayList<>();
+        for (Article article : articleList){
+            List<String> tags = tagMapper.selectTagsByArticle(article.getId());
+            ArticleInfo articleInfo = new ArticleInfo(article,tags,false);
+            articleInfoList.add(articleInfo);
+        }
+
+        return new JsonResult<>(200,"success",articleInfoList);
+    }
+
     /**
      * 获取标签数
      */

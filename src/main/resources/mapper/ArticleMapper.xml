@@ -262,12 +262,39 @@
         and document.state = 1
         ORDER BY archive
     </select>
+    <select id="selectArticlesInArchive" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        SELECT
+        article.id,
+        title,
+        version,
+        browse_count,
+        has_published,
+        document_id,
+        archive,
+        create_time,
+        update_time,
+        article.state,
+        content
+        FROM article
+        right join document
+        on document.show_id = article.id
+        WHERE article.state = 1
+        and document.state = 1
+        and archive = #{archive,jdbcType=VARCHAR}
+    </select>
     <select id="selectArchiveCount" resultType="java.lang.Integer">
         SELECT
         count(DISTINCT archive)
         FROM article
         where state = 1
         and has_published = 1
+    </select>
+    <select id="selectArchives" resultType="string">
+        SELECT
+        archive
+        FROM article
+        WHERE state = 1
+        GROUP BY archive
     </select>
     <select id="selectArticleByVersion" resultType="java.lang.Integer">
         SELECT

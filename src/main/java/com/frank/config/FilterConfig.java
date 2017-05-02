@@ -25,6 +25,7 @@ public class FilterConfig {
         urlList.add("/p/new");
         urlList.add("/p/edit/*");
         urlList.add("/p/*/check/*");
+        urlList.add("/p/archives/*");
         registrationBean.setUrlPatterns(urlList);
         return registrationBean;
     }
