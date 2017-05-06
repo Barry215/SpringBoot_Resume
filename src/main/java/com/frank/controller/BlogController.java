@@ -369,7 +369,7 @@ public class BlogController {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "document_id", value = "文档ID", required = true, dataType = "Integer"),
         @ApiImplicitParam(name = "version", value = "版本号", required = true, dataType = "String")})
-    @RequestMapping(value = "/p/{document_id}/check/{version}",method = RequestMethod.PUT)
+    @RequestMapping(value = "/p/{document_id}/check/{version:[a-zA-Z0-9\\.]+}",method = RequestMethod.PUT)
     @CacheEvict(cacheNames = "show_articleInfo", key = "'id:'+#document_id")
     public JsonResult<?> checkVersion(@PathVariable int document_id, @PathVariable String version) {
         Integer article_id = articleMapper.selectArticleByVersion(document_id,version);
