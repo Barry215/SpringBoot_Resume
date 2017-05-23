@@ -260,7 +260,7 @@
         on document.show_id = article.id
         WHERE article.state = 1
         and document.state = 1
-        ORDER BY archive
+        ORDER BY document.show_id DESC
     </select>
     <select id="selectArticlesInArchive" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
         SELECT

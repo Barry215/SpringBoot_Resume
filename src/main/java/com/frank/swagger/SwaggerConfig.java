@@ -39,10 +39,10 @@ public class SwaggerConfig {
         Contact contact=new Contact("frank",
                 "https://barry215.github.io","frank315111@gmail.com");
         return new ApiInfoBuilder()
-                .title("Spring Boot 后台API")
+                .title("博客平台 API")
                 .description("Swagger2 API")
-                //.termsOfServiceUrl("http://www.jianshu.com/u/f192766abeab")
-                //.contact("作者名")
+                .termsOfServiceUrl("https://barry215.github.io")
+//                .contact("作者名")
                 .contact(contact)
                 .version("1.0")
                 .build();

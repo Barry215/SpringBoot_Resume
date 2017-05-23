@@ -37,6 +37,7 @@ import java.util.*;
  * Created by frank on 17/3/9.
  */
 //@Api(value = "示例接口")
+@Api(value = "文章")
 @RestController
 @RequestMapping("/")
 @EnableAutoConfiguration
@@ -72,7 +73,7 @@ public class BlogController {
 
     @Transactional
     @ApiOperation(notes = "创建文章", value = "创建文章")
-    @ApiImplicitParam(name = "articleForm", value = "示例实体", required = true, dataType = "ArticleForm")
+    @ApiImplicitParam(paramType = "body", name = "articleForm", value = "示例实体", required = true, dataType = "ArticleForm")
     @RequestMapping(value = "/p/new",method = RequestMethod.POST)
     public JsonResult<?> createArticle(@RequestBody @Valid ArticleForm articleForm, BindingResult result) {
 
@@ -135,7 +136,7 @@ public class BlogController {
      */
 
     @ApiOperation(notes = "获取草稿文章", value = "获取草稿文章")
-    @ApiImplicitParam(name = "document_id", value = "文章ID", required = true, dataType = "Integer")
+    @ApiImplicitParam(paramType = "path", name = "document_id", value = "文章ID", required = true, dataType = "Integer")
     @RequestMapping(value = "/p/edit/{document_id}",method = RequestMethod.GET)
     public JsonResult<?> getEditArticles(@PathVariable int document_id) {
         Document document = documentMapper.selectByPrimaryKey(document_id);
@@ -155,7 +156,7 @@ public class BlogController {
 
     @Transactional
     @ApiOperation(notes = "修改文章", value = "修改文章")
-    @ApiImplicitParam(name = "articleModifyForm", value = "表单", required = true, dataType = "ArticleModifyForm")
+    @ApiImplicitParam(paramType = "body", name = "articleModifyForm", value = "表单", required = true, dataType = "ArticleModifyForm")
     @RequestMapping(value = "/p/edit",method = RequestMethod.PUT)
     @CacheEvict(cacheNames = "show_articleInfo", key = "'id:'+#articleModifyForm.document_id", condition="#articleModifyForm.hasPublished == 1")
     public JsonResult<?> modifyArticle(@RequestBody @Valid ArticleModifyForm articleModifyForm, BindingResult bindingResult) {
@@ -228,8 +229,8 @@ public class BlogController {
 
     @ApiOperation(value = "获取文章列表",notes = "获取文章列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "offset", value = "页码", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "Integer")})
+            @ApiImplicitParam(paramType = "path", name = "offset", value = "页码", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "path", name = "size", value = "每页数量", required = true, dataType = "Integer")})
     @RequestMapping(value = "/p/u/{offset}/{size}",method = RequestMethod.GET)
     public JsonResult<?> getDocumentsList(@PathVariable int offset,@PathVariable int size) {
         PageHelper.startPage(offset, size);
@@ -259,7 +260,7 @@ public class BlogController {
      */
 
     @ApiOperation(notes = "获取文章", value = "获取文章")
-    @ApiImplicitParam(name = "document_id", value = "文章ID", required = true, dataType = "Integer")
+    @ApiImplicitParam(paramType = "path", name = "document_id", value = "文章ID", required = true, dataType = "Integer")
     @RequestMapping(value = "/p/{document_id}",method = RequestMethod.GET)
     public JsonResult<?> getArticle(@PathVariable int document_id) {
 
@@ -276,7 +277,7 @@ public class BlogController {
      */
 
     @ApiOperation(notes = "获取历史文章", value = "获取历史文章")
-    @ApiImplicitParam(name = "document_id", value = "文章ID", required = true, dataType = "Integer")
+    @ApiImplicitParam(paramType = "path", name = "document_id", value = "文章ID", required = true, dataType = "Integer")
     @RequestMapping(value = "/p/h/{document_id}",method = RequestMethod.GET)
     public JsonResult<?> getHistoryArticles(@PathVariable int document_id) {
         List<Article> articleList= articleMapper.selectHistoryArticles(document_id);
@@ -295,8 +296,8 @@ public class BlogController {
 
     @ApiOperation(notes = "获取归档文章", value = "获取归档文章")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "offset", value = "页码", required = true, dataType = "Integer"),
-        @ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "Integer")})
+        @ApiImplicitParam(paramType = "path", name = "offset", value = "页码", required = true, dataType = "Integer"),
+        @ApiImplicitParam(paramType = "path", name = "size", value = "每页数量", required = true, dataType = "Integer")})
     @RequestMapping(value = "/p/archive/{offset}/{size}",method = RequestMethod.GET)
     public JsonResult<?> getArchiveArticles(@PathVariable int offset,@PathVariable int size) {
         PageHelper.startPage(offset, size);
@@ -367,8 +368,8 @@ public class BlogController {
 
     @ApiOperation(notes = "切换文章版本", value = "切换文章版本")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "document_id", value = "文档ID", required = true, dataType = "Integer"),
-        @ApiImplicitParam(name = "version", value = "版本号", required = true, dataType = "String")})
+        @ApiImplicitParam(paramType = "path", name = "document_id", value = "文档ID", required = true, dataType = "Integer"),
+        @ApiImplicitParam(paramType = "path", name = "version", value = "版本号", required = true, dataType = "String")})
     @RequestMapping(value = "/p/{document_id}/check/{version:[a-zA-Z0-9\\.]+}",method = RequestMethod.PUT)
     @CacheEvict(cacheNames = "show_articleInfo", key = "'id:'+#document_id")
     public JsonResult<?> checkVersion(@PathVariable int document_id, @PathVariable String version) {

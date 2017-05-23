@@ -9,6 +9,7 @@ import com.frank.vcode.Captcha;
 import com.frank.vcode.GifCaptcha;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by frank on 17/4/19.
  */
+@Api(value = "管理员")
 @RestController
 @RequestMapping("/admin")
 @EnableAutoConfiguration
@@ -103,8 +105,8 @@ public class AdminController {
      * 获取验证码（Gif版本）
      */
     @ApiOperation(notes = "获取验证码", value = "获取验证码")
-    @RequestMapping(value = "getGifCode", method = RequestMethod.GET)
-    public void getGifCode(HttpServletResponse response, HttpServletRequest request) {
+    @RequestMapping(value = "getGifCode/{random}", method = RequestMethod.GET)
+    public void getGifCode(@PathVariable int random, HttpServletResponse response, HttpServletRequest request) {
         try {
             response.setHeader("Pragma", "No-cache");
             response.setHeader("Cache-Control", "no-cache");
@@ -127,9 +129,9 @@ public class AdminController {
 
     @ApiOperation(notes = "后台登录", value = "后台登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "name", value = "用户名", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, dataType = "String")})
+            @ApiImplicitParam(paramType = "query", name = "name", value = "用户名", required = true, dataType = "String", defaultValue = "admin"),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, dataType = "String", defaultValue = "123456"),
+            @ApiImplicitParam(paramType = "query", name = "verifyCode", value = "验证码", required = true, dataType = "String", defaultValue = "s2g7")})
 //    @ApiResponses({
 //       @ApiResponse(code=200,message="登录成功"),
 //       @ApiResponse(code=401,message="用户名或密码错误")

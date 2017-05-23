@@ -1,0 +1,1013 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Swagger2 API",
+    "version": "1.0",
+    "title": "Spring Boot 后台API",
+    "contact": {
+      "name": "frank",
+      "url": "https://barry215.github.io",
+      "email": "frank315111@gmail.com"
+    }
+  },
+  "host": "localhost:8888",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "blog-controller",
+      "description": "Blog Controller"
+    },
+    {
+      "name": "admin-controller",
+      "description": "Admin Controller"
+    }
+  ],
+  "paths": {
+    "/admin/getGifCode/{random}": {
+      "get": {
+        "tags": [
+          "admin-controller"
+        ],
+        "summary": "获取验证码",
+        "description": "获取验证码",
+        "operationId": "getGifCodeUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "random",
+            "in": "path",
+            "description": "random",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/admin/kaptcha": {
+      "get": {
+        "tags": [
+          "admin-controller"
+        ],
+        "summary": "获取验证码",
+        "description": "获取验证码",
+        "operationId": "getKaptchaImageUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelAndView"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "tags": [
+          "admin-controller"
+        ],
+        "summary": "后台登录",
+        "description": "后台登录",
+        "operationId": "loginUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "用户名",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "密码",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "verifyCode",
+            "in": "query",
+            "description": "验证码",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/admin/logout": {
+      "get": {
+        "tags": [
+          "admin-controller"
+        ],
+        "summary": "退出登录",
+        "description": "退出登录",
+        "operationId": "logoutUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/admin/sign_in": {
+      "get": {
+        "tags": [
+          "admin-controller"
+        ],
+        "summary": "转向登录页面",
+        "description": "转向登录页面",
+        "operationId": "signInUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/admin/unAuthorization": {
+      "get": {
+        "tags": [
+          "admin-controller"
+        ],
+        "summary": "转向未授权页面",
+        "description": "转向未授权页面",
+        "operationId": "unAuthorizationUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/archive/count": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取归档数",
+        "description": "获取归档数",
+        "operationId": "getArchiveArticlesUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/archive/{offset}/{size}": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取归档文章",
+        "description": "获取归档文章",
+        "operationId": "getArchiveArticlesUsingGET_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "description": "页码",
+            "required": true,
+            "type": "ref"
+          },
+          {
+            "name": "size",
+            "in": "path",
+            "description": "每页数量",
+            "required": true,
+            "type": "ref"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/archives": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取归档数条目",
+        "description": "获取归档条目",
+        "operationId": "getArchivesUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/archives/{archive}/u": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取归档内文章",
+        "description": "获取归档内文章",
+        "operationId": "getArticleInArchivesUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "archive",
+            "in": "path",
+            "description": "archive",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/count": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取文章总数",
+        "description": "获取文章总数",
+        "operationId": "getArticleCountUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/edit": {
+      "put": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "修改文章",
+        "description": "修改文章",
+        "operationId": "modifyArticleUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "articleModifyForm",
+            "description": "表单",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArticleModifyForm"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/edit/u": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取草稿列表",
+        "description": "获取草稿列表",
+        "operationId": "getEditArticlesUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/edit/{document_id}": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取草稿文章",
+        "description": "获取草稿文章",
+        "operationId": "getEditArticlesUsingGET_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "description": "文章ID",
+            "required": true,
+            "type": "ref"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/h/{document_id}": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取历史文章",
+        "description": "获取历史文章",
+        "operationId": "getHistoryArticlesUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "description": "文章ID",
+            "required": true,
+            "type": "ref"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/new": {
+      "post": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "创建文章",
+        "description": "创建文章",
+        "operationId": "createArticleUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "articleForm",
+            "description": "示例实体",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArticleForm"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/tag/count": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取标签数",
+        "description": "获取标签数",
+        "operationId": "getTagsCountUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/u/{offset}/{size}": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取文章列表",
+        "description": "获取文章列表",
+        "operationId": "getDocumentsListUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "description": "页码",
+            "required": true,
+            "type": "ref"
+          },
+          {
+            "name": "size",
+            "in": "path",
+            "description": "每页数量",
+            "required": true,
+            "type": "ref"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/{document_id}": {
+      "get": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "获取文章",
+        "description": "获取文章",
+        "operationId": "getArticleUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "description": "文章ID",
+            "required": true,
+            "type": "ref"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/p/{document_id}/check/{version}": {
+      "put": {
+        "tags": [
+          "blog-controller"
+        ],
+        "summary": "切换文章版本",
+        "description": "切换文章版本",
+        "operationId": "checkVersionUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "description": "文档ID",
+            "required": true,
+            "type": "ref"
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "description": "版本号",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/JsonResult«object»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ArticleForm": {
+      "type": "object",
+      "properties": {
+        "archive": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "hasPublished": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ArticleModifyForm": {
+      "type": "object",
+      "properties": {
+        "archive": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "document_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hasPublished": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ModelAndView": {
+      "type": "object",
+      "properties": {
+        "empty": {
+          "type": "boolean"
+        },
+        "model": {
+          "type": "object"
+        },
+        "modelMap": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "reference": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "100",
+            "101",
+            "102",
+            "103",
+            "200",
+            "201",
+            "202",
+            "203",
+            "204",
+            "205",
+            "206",
+            "207",
+            "208",
+            "226",
+            "300",
+            "301",
+            "302",
+            "303",
+            "304",
+            "305",
+            "307",
+            "308",
+            "400",
+            "401",
+            "402",
+            "403",
+            "404",
+            "405",
+            "406",
+            "407",
+            "408",
+            "409",
+            "410",
+            "411",
+            "412",
+            "413",
+            "414",
+            "415",
+            "416",
+            "417",
+            "418",
+            "419",
+            "420",
+            "421",
+            "422",
+            "423",
+            "424",
+            "426",
+            "428",
+            "429",
+            "431",
+            "451",
+            "500",
+            "501",
+            "502",
+            "503",
+            "504",
+            "505",
+            "506",
+            "507",
+            "508",
+            "509",
+            "510",
+            "511"
+          ]
+        },
+        "view": {
+          "$ref": "#/definitions/View"
+        },
+        "viewName": {
+          "type": "string"
+        }
+      }
+    },
+    "JsonResult«object»": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object"
+        },
+        "message": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "View": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
