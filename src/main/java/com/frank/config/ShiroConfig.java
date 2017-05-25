@@ -60,7 +60,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/p/new", "authc,perms[create]"); // 配置被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/p/edit/**", "authc,perms[edit]");
         filterChainDefinitionMap.put("/p/*/check/**", "authc,perms[check]");
-        filterChainDefinitionMap.put("/p/archives/**", "authc");
+//        filterChainDefinitionMap.put("/p/archives/**", "authc");
         filterChainDefinitionMap.put("/**", "anon");
 
 

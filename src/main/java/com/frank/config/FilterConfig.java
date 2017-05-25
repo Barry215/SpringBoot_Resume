@@ -1,9 +1,11 @@
 package com.frank.config;
 
 import com.frank.filter.AdminFilter;
+import com.frank.filter.CORSFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,19 @@ public class FilterConfig {
         urlList.add("/p/new");
         urlList.add("/p/edit/*");
         urlList.add("/p/*/check/*");
-        urlList.add("/p/archives/*");
+        registrationBean.setUrlPatterns(urlList);
+        return registrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean corsFilterRegistrationBean() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setName("corsFilter2");
+        CORSFilter corsFilter2 = new CORSFilter();
+        registrationBean.setFilter(corsFilter2);
+        registrationBean.setOrder(20);
+        List<String> urlList = new ArrayList<>();
+        urlList.add("/**");
         registrationBean.setUrlPatterns(urlList);
         return registrationBean;
     }
@@ -38,12 +52,12 @@ public class FilterConfig {
     @Order(1)
     Filter adminFilter() {
         return new AdminFilter();
-    }
-
-    @Bean
-    @Order(2)
-    public Filter helloFilter() {
-        return new HelloFilter();
     }*/
+
+//    @Bean
+//    @Order(2)
+//    public Filter corsFilter() {
+//        return new CORSFilter();
+//    }
 
 }
