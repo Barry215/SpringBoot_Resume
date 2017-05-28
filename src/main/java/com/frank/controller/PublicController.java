@@ -8,6 +8,7 @@ import com.frank.dto.*;
 import com.frank.model.Article;
 import com.frank.model.Document;
 import com.frank.model.Tag;
+import com.frank.model.User;
 import com.frank.service.BlogService;
 import com.frank.service.TokenService;
 import com.frank.service.ValidateService;
@@ -154,6 +155,7 @@ public class PublicController {
                 articleWithTime.getArticleInfoList().add(articleInfo);
             }else {
                 articleWithTimeList.add(articleWithTime);
+                time = format_time;
                 articleWithTime = new ArticleWithTime();
                 articleWithTime.setTime(format_time);
                 articleWithTime.getArticleInfoList().add(articleInfo);
@@ -216,8 +218,14 @@ public class PublicController {
     @RequestMapping(value = "/p/tag/{offset}/{size}",method = RequestMethod.GET)
     public JsonResult<?> getTagArticles(@PathVariable int offset,@PathVariable int size) {
         PageHelper.startPage(offset, size);
-        List<ArticleWithTag> articleList = articleMapper.selectTagDocuments();
-        return new JsonResult<>(200,"success",articleList);
+        List<ArticleWithTag> articleWithTagList = articleMapper.selectTagDocuments();
+        List<ArticleInfoWithTag> articleInfoWithTagList = new ArrayList<>();
+        for (ArticleWithTag article : articleWithTagList){
+            List<String> tags = tagMapper.selectTagsByArticle(article.getId());
+            ArticleInfoWithTag articleInfoWithTag = new ArticleInfoWithTag(article,tags,false);
+            articleInfoWithTagList.add(articleInfoWithTag);
+        }
+        return new JsonResult<>(200,"success",articleInfoWithTagList);
     }
 
     /**
@@ -281,7 +289,16 @@ public class PublicController {
     @ApiOperation(notes = "获取个人信息", value = "获取个人信息")
     @RequestMapping(value = "/userInfo",method = RequestMethod.GET)
     public JsonResult<?> getUserInfo() {
-        return new JsonResult<>(200,"success",userMapper.selectByPrimaryKey(1));
+        User user = userMapper.selectByPrimaryKey(1);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName(user.getName());
+        userInfo.setEmail(user.getEmail());
+        userInfo.setDescription(user.getDescription());
+        userInfo.setGithub(user.getGithub());
+        userInfo.setPhone(user.getPhone());
+        userInfo.setUserHead(user.getUserHead());
+        userInfo.setWeibo(user.getWeibo());
+        return new JsonResult<>(200,"success",userInfo);
     }
 
     /**

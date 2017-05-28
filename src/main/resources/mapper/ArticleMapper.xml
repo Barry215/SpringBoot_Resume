@@ -226,7 +226,7 @@
         INNER JOIN document
         on document.show_id = article.id
         WHERE document.state = 1
-        order by document.id desc
+        order by create_time desc
     </select>
     <select id="selectHistoryArticles" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         SELECT
