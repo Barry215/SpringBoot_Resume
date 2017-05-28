@@ -19,4 +19,8 @@ public interface DocumentMapper {
     int countDocument();
 
     int checkVersion(@Param("document_id") int document_id,@Param("article_id") int article_id);
+
+    int deleteDocument(Integer id);
+
+    int recoverDocument(Integer id);
 }

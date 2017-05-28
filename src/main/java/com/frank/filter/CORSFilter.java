@@ -16,10 +16,10 @@ public class CORSFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, HEAD, PUT, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "120");
+//        response.setHeader("Access-Control-Max-Age", "3628800");
         response.setHeader("Access-Control-Allow-Headers", "Accept, Origin, X-Requested-With, Content-Type, Last-Modified");
+        response.setHeader("Access-Control-Allow-Origin", "*");
         filterChain.doFilter(req, res);
     }
 

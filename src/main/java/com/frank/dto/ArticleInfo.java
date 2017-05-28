@@ -3,6 +3,7 @@ package com.frank.dto;
 import com.frank.model.Article;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +18,8 @@ public class ArticleInfo extends ArticleForm implements Serializable {
     private int browseCount;
 
     private int document_id;
+
+    private Date create_time;
 
     public ArticleInfo() {
     }
@@ -35,6 +38,7 @@ public class ArticleInfo extends ArticleForm implements Serializable {
         this.article_id = article.getId();
         this.browseCount = article.getBrowseCount();
         this.document_id = article.getDocumentId();
+        this.create_time = article.getCreateTime();
     }
 
     public int getArticle_id() {
@@ -61,11 +65,21 @@ public class ArticleInfo extends ArticleForm implements Serializable {
         this.document_id = document_id;
     }
 
+    public Date getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(Date create_time) {
+        this.create_time = create_time;
+    }
+
     @Override
     public String toString() {
         return "ArticleInfo{" +
-                "browseCount=" + browseCount +
+                "article_id=" + article_id +
+                ", browseCount=" + browseCount +
                 ", document_id=" + document_id +
+                ", create_time=" + create_time +
                 '}';
     }
 }

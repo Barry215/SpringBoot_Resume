@@ -20,6 +20,16 @@
         DELETE FROM document
         WHERE id = #{id,jdbcType=INTEGER}
     </delete>
+    <update id="deleteDocument" parameterType="java.lang.Integer">
+        UPDATE document
+        SET state = 0
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="recoverDocument" parameterType="java.lang.Integer">
+        UPDATE document
+        SET state = 1
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
     <insert id="insert" parameterType="com.frank.model.Document">
         INSERT INTO document (id, show_id, edit_id,
                               state)
@@ -90,9 +100,7 @@
         update document
         <set>
                 show_id = #{article_id,jdbcType=INTEGER},
-
                 edit_id = #{article_id,jdbcType=INTEGER}
-
         </set>
         where id = #{document_id,jdbcType=INTEGER}
     </update>

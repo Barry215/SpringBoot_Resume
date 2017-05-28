@@ -27,7 +27,7 @@ public class BrowseCountAspect {
     @Resource
     private DocumentMapper documentMapper;
 
-    @Pointcut("execution(public * com.frank.controller.BlogController.getArticle(int)) && args(document_id)")
+    @Pointcut("execution(public * com.frank.controller.PublicController.getArticle(int)) && args(document_id)")
     public void browseCount(int document_id){}
 
     @Before("browseCount(document_id)")

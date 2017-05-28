@@ -16,6 +16,9 @@
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.frank.model.Article">
         <result column="content" jdbcType="LONGVARCHAR" property="content"/>
     </resultMap>
+    <resultMap extends="ResultMapWithBLOBs" id="ResultMapWithTag" type="com.frank.dto.ArticleWithTag">
+        <result column="name" jdbcType="VARCHAR" property="tagName"/>
+    </resultMap>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         SELECT
             id,
@@ -185,9 +188,9 @@
             state         = #{state,jdbcType=INTEGER}
         WHERE id = #{id,jdbcType=INTEGER}
     </update>
-    <select id="selectEditArticle" resultMap="ResultMapWithBLOBs">
+    <select id="selectSavedArticle" resultMap="ResultMapWithBLOBs">
         SELECT
-            id,
+            article.id,
             title,
             version,
             browse_count,
@@ -196,11 +199,14 @@
             archive,
             create_time,
             update_time,
-            state,
+            document.state,
             content
         FROM article
+        INNER JOIN document
+        on document.edit_id = article.id
         WHERE has_published = 0
-        and state = 1
+        and document.state = 1
+        and document.show_id IS NULL
         order by id desc
     </select>
     <select id="selectDocuments" resultMap="ResultMapWithBLOBs">
@@ -214,13 +220,12 @@
         archive,
         create_time,
         update_time,
-        article.state,
+        document.state,
         content
         FROM article
-        RIGHT JOIN document
+        INNER JOIN document
         on document.show_id = article.id
         WHERE document.state = 1
-        and article.state = 1
         order by document.id desc
     </select>
     <select id="selectHistoryArticles" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
@@ -238,7 +243,6 @@
         content
         FROM article
         WHERE document_id = #{document_id,jdbcType=INTEGER}
-        and state = 1
         and has_published = 1
         order by id desc
     </select>
@@ -256,11 +260,32 @@
         article.state,
         content
         FROM article
-        right join document
+        inner join document
         on document.show_id = article.id
-        WHERE article.state = 1
-        and document.state = 1
-        ORDER BY document.show_id DESC
+        WHERE document.state = 1
+        ORDER BY archive
+    </select>
+    <select id="selectTagDocuments" resultMap="ResultMapWithTag">
+        SELECT
+        article.id,
+        title,
+        version,
+        browse_count,
+        has_published,
+        document_id,
+        archive,
+        tag.name,
+        create_time,
+        update_time,
+        article.state,
+        content
+        FROM article
+        inner join document
+        on document.show_id = article.id
+        inner join tag
+        ON article.id = tag.article_id
+        WHERE document.state = 1
+        ORDER BY `name`
     </select>
     <select id="selectArticlesInArchive" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
         SELECT
@@ -276,25 +301,45 @@
         article.state,
         content
         FROM article
-        right join document
+        inner join document
         on document.show_id = article.id
-        WHERE article.state = 1
-        and document.state = 1
+        WHERE document.state = 1
         and archive = #{archive,jdbcType=VARCHAR}
+    </select>
+    <select id="selectArticlesInTag" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        SELECT
+        article.id,
+        title,
+        version,
+        browse_count,
+        has_published,
+        document_id,
+        archive,
+        create_time,
+        update_time,
+        article.state,
+        content
+        FROM article
+        inner join document
+        on document.show_id = article.id
+        WHERE document.state = 1
+        and document.show_id in (select article_id from tag where `name` = #{tag,jdbcType=VARCHAR})
     </select>
     <select id="selectArchiveCount" resultType="java.lang.Integer">
         SELECT
         count(DISTINCT archive)
         FROM article
-        where state = 1
-        and has_published = 1
+        inner join document
+        on article.id = document.show_id
+        where document.state = 1
     </select>
-    <select id="selectArchives" resultType="string">
+    <select id="selectArchiveList" resultType="string">
         SELECT
-        archive
+        DISTINCT archive
         FROM article
-        WHERE state = 1
-        GROUP BY archive
+        inner join document
+        on article.id = document.show_id
+        WHERE document.state = 1
     </select>
     <select id="selectArticleByVersion" resultType="java.lang.Integer">
         SELECT
@@ -302,8 +347,9 @@
         FROM article
         where document_id = #{document_id,jdbcType=INTEGER}
         and version = #{version,jdbcType=VARCHAR}
+        and document.state = 1
     </select>
-    <select id="selectArticleLikeTitle" resultMap="ResultMapWithBLOBs" parameterType="string" resultType="java.util.List">
+    <select id="selectArticleLikeTitle" resultMap="ResultMapWithBLOBs" parameterType="string">
         SELECT
             article.id,
             title,
@@ -314,13 +360,32 @@
             archive,
             create_time,
             update_time,
-            article.state,
+            document.state,
             content
         FROM article
-        right JOIN document
+        INNER JOIN document
         on article.id = document.show_id
         WHERE title LIKE CONCAT('%',#{title},'%')
         and document.state = 1
-        and article.state = 1
+    </select>
+    <select id="selectArticleLikeContent" resultMap="ResultMapWithBLOBs" parameterType="string">
+        SELECT
+        article.id,
+        title,
+        version,
+        browse_count,
+        has_published,
+        document_id,
+        archive,
+        create_time,
+        update_time,
+        document.state,
+        content
+        FROM article
+        INNER JOIN document
+        on article.id = document.show_id
+        WHERE (title LIKE CONCAT('%',#{content},'%')
+        or content LIKE CONCAT('%',#{content},'%'))
+        and document.state = 1
     </select>
 </mapper>

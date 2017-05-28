@@ -34,12 +34,12 @@ public class FilterConfig {
     @Bean
     public FilterRegistrationBean corsFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        registrationBean.setName("corsFilter2");
-        CORSFilter corsFilter2 = new CORSFilter();
-        registrationBean.setFilter(corsFilter2);
+        registrationBean.setName("corsFilter");
+        CORSFilter corsFilter = new CORSFilter();
+        registrationBean.setFilter(corsFilter);
         registrationBean.setOrder(20);
         List<String> urlList = new ArrayList<>();
-        urlList.add("/**");
+        urlList.add("/*");
         registrationBean.setUrlPatterns(urlList);
         return registrationBean;
     }

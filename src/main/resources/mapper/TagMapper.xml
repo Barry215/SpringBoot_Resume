@@ -78,5 +78,14 @@
         SELECT
             count(DISTINCT `name`)
         FROM tag
+        where article_id in
+              (select show_id from document where state = 1)
+    </select>
+    <select id="selectTagList" resultType="java.lang.String">
+        SELECT
+        DISTINCT `name`
+        FROM tag
+        where article_id in
+              (select show_id from document where state = 1)
     </select>
 </mapper>

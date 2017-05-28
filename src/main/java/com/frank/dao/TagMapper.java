@@ -22,4 +22,6 @@ public interface TagMapper {
     List<String> selectTagsByArticle(Integer id);
 
     int selectTagsCount();
+
+    List<String> selectTagList();
 }

@@ -26,7 +26,7 @@ public class SpendTimeAspect {
     private ThreadLocal<Long> time = new ThreadLocal<>();
 
 //    @Pointcut("execution(public * com.frank.controller..*.*(..))")
-    @Pointcut("execution(public * com.frank.controller.BlogController.*(..))")
+    @Pointcut("execution(public * com.frank.controller.PublicController.*(..))")
     public void timeSpend(){}
 
 

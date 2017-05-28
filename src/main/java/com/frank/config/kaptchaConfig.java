@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Properties;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by frank on 17/4/21.

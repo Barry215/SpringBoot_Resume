@@ -1,13 +1,12 @@
 package com.frank;
 
-import com.frank.controller.BlogController;
+import com.frank.controller.PublicController;
 import com.frank.dao.ArticleMapper;
 import com.frank.dao.DocumentMapper;
 import com.frank.dao.TagMapper;
 import com.frank.dto.ArticleInfo;
 import com.frank.model.Article;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +23,7 @@ import java.util.List;
 public class SpringBootResumeApplicationTests {
 
 	@Resource
-	private BlogController blogController;
+	private PublicController publicController;
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -76,7 +75,7 @@ public class SpringBootResumeApplicationTests {
 
 	@Test
 	public void contextLoads() {
-	    System.out.println(blogController.getArticleCount());
+	    System.out.println(publicController.getArticleCount());
 	}
 
 
