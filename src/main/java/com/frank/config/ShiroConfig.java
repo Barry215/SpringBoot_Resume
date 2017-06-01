@@ -37,17 +37,17 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setLoginUrl("/admin/sign_in"); // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-//        shiroFilterFactoryBean.setSuccessUrl("admin/index");     // 登录成功后要跳转的链接
+        shiroFilterFactoryBean.setLoginUrl("/sign_in"); // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+//        shiroFilterFactoryBean.setSuccessUrl("/index");     // 登录成功后要跳转的链接
         shiroFilterFactoryBean.setUnauthorizedUrl("/admin/unAuthorization");  // 未授权界面;
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>(); // 拦截器
 
         // 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边
-        filterChainDefinitionMap.put("/logout", "logout");
-        filterChainDefinitionMap.put("/admin/p/new", "authc,perms[create]"); // 配置被拦截的链接 顺序判断
-        filterChainDefinitionMap.put("/admin/p/edit", "authc,perms[edit]");
-        filterChainDefinitionMap.put("/admin/p/*/check/*", "authc,perms[check]");
-        filterChainDefinitionMap.put("/admin/*", "authc");
+//        filterChainDefinitionMap.put("/logout", "logout");
+//        filterChainDefinitionMap.put("/admin/p/new", "authc,perms[create]"); // 配置被拦截的链接 顺序判断
+//        filterChainDefinitionMap.put("/admin/p/edit", "authc,perms[edit]");
+//        filterChainDefinitionMap.put("/admin/p/*/check/*", "authc,perms[check]");
+//        filterChainDefinitionMap.put("/admin/*", "authc");
         filterChainDefinitionMap.put("/*", "anon");
 
 

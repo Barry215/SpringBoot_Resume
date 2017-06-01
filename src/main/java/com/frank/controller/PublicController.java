@@ -1,5 +1,7 @@
 package com.frank.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.frank.dao.ArticleMapper;
 import com.frank.dao.DocumentMapper;
 import com.frank.dao.TagMapper;
@@ -10,14 +12,24 @@ import com.frank.model.Document;
 import com.frank.model.Tag;
 import com.frank.model.User;
 import com.frank.service.BlogService;
+import com.frank.service.QiniuUpService;
 import com.frank.service.TokenService;
 import com.frank.service.ValidateService;
+import com.frank.service.impl.QiniuUpServiceImpl;
 import com.frank.shiro.MyShiroRealm;
 import com.frank.vcode.Captcha;
 import com.frank.vcode.GifCaptcha;
 import com.github.pagehelper.PageHelper;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import com.qiniu.common.QiniuException;
+import com.qiniu.common.Zone;
+import com.qiniu.http.Response;
+import com.qiniu.processing.OperationManager;
+import com.qiniu.storage.Configuration;
+import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
+import com.qiniu.util.UrlSafeBase64;
 import io.swagger.annotations.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.ShiroException;
@@ -26,9 +38,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -38,6 +52,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -84,6 +99,7 @@ public class PublicController {
 
     @Resource
     private TokenService tokenService;
+
 
     /**
      * 获取文章
@@ -377,15 +393,15 @@ public class PublicController {
     })
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public JsonResult<?> login(HttpServletRequest request, @RequestParam("name") String name, @RequestParam("password") String password, @RequestParam("verifyCode") String verifyCode) {
-
-        HttpSession session = request.getSession();
-        String code = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        if (code == null) {
-            return new JsonResult<>(403, "验证码未获取");
-        }
-        if (!code.equals(verifyCode.toLowerCase())) {
-            return new JsonResult<>(400, "验证码错误");
-        }
+//        验证码模块暂时忽略
+//        HttpSession session = request.getSession();
+//        String code = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+//        if (code == null) {
+//            return new JsonResult<>(403, "验证码未获取");
+//        }
+//        if (!code.equals(verifyCode.toLowerCase())) {
+//            return new JsonResult<>(400, "验证码错误");
+//        }
 
 //        if (userMapper.selectByNameAndPwd(name,password) != null){
 //            String token = tokenService.createToken(name, password);
@@ -472,4 +488,29 @@ public class PublicController {
 //        SecurityUtils.getSubject().logout();  LogoutFilter帮你实现了
         return new JsonResult<>(200, "退出成功！");
     }
+
+    /*
+     * 七牛获取凭证
+     */
+
+    @ApiOperation(notes = "七牛获取凭证", value = "七牛获取凭证")
+    @ApiImplicitParam(paramType = "query", name = "name", value = "七牛获取凭证", required = false, dataType = "String", defaultValue = "aaa")
+    @RequestMapping(value = "/getUptokenOfQiniu.do", method = RequestMethod.POST)
+    public BaseJsonResult getUptokenOfQiniu(@RequestParam(value = "name", required = false) String name) {
+        Auth auth = Auth.create("AQyqTUgn06_Z-b-WF_5QwQqJTIRIg0dlzxWhNn35", "Hy_yD1ETkM_wHqNi1Vdmmp4AH28MfzbR_Qh4Hn-3");
+        String token="";
+        if("".equals(name)||name ==null){
+            token = auth.uploadToken("blog");
+        }else{
+            if("patch".equals(name)){
+                token = auth.uploadToken("blog");//补丁空间名:yourstatic
+            }else{
+                token = auth.uploadToken("blog");
+            }
+        }
+
+        return new BaseJsonResult(token);
+    }
+
+
 }

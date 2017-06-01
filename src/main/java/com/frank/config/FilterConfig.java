@@ -16,20 +16,18 @@ import java.util.List;
 @Configuration
 public class FilterConfig {
 
-    @Bean
-    public FilterRegistrationBean greetingFilterRegistrationBean() {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        registrationBean.setName("adminFilter");
-        AdminFilter adminFilter = new AdminFilter();
-        registrationBean.setFilter(adminFilter);
-        registrationBean.setOrder(10);
-        List<String> urlList = new ArrayList<>();
-        urlList.add("/p/new");
-        urlList.add("/p/edit/*");
-        urlList.add("/p/*/check/*");
-        registrationBean.setUrlPatterns(urlList);
-        return registrationBean;
-    }
+//    @Bean
+//    public FilterRegistrationBean greetingFilterRegistrationBean() {
+//        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+//        registrationBean.setName("adminFilter");
+//        AdminFilter adminFilter = new AdminFilter();
+//        registrationBean.setFilter(adminFilter);
+//        registrationBean.setOrder(10);
+//        List<String> urlList = new ArrayList<>();
+//        urlList.add("/admin/*");
+//        registrationBean.setUrlPatterns(urlList);
+//        return registrationBean;
+//    }
 
     @Bean
     public FilterRegistrationBean corsFilterRegistrationBean() {
