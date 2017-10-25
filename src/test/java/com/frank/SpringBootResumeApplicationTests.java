@@ -39,7 +39,7 @@ public class SpringBootResumeApplicationTests {
 
     @Test
     public void setString(){
-        stringRedisTemplate.opsForValue().set("hello" , "world! Redis");
+//        stringRedisTemplate.opsForValue().set("hello" , "world! Redis");
 
         String value = stringRedisTemplate.opsForValue().get("hello");
         Assert.assertEquals("world! Redis" , value);
